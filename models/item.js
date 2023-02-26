@@ -1,0 +1,34 @@
+const Item = (sequelize,DataTypes)=>{
+    const Item = sequelize.define('Item', {
+        // Model attributes are defined here
+        id:{
+          type: DataTypes.INTEGER,
+          autoIncrement: true,
+          primaryKey: true
+        },
+        quantity:{
+            type: DataTypes.INTEGER
+        }
+      });
+      
+      Item.associate = model=>{
+        Item.belongsTo(model.Product, {
+          foreignKey: 'productId',
+          targetKey: 'id'
+        })
+      }
+
+      Item.associate = model=>{
+        Item.belongsTo(model.Cart, {
+          foreignKey: 'cartId',
+          targetKey: 'id'
+        })
+      }
+
+      return Item
+}
+
+
+
+
+module.exports = Item
