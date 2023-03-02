@@ -5,10 +5,10 @@
   "main": "./index.js",
   "scripts": {
     "start": "node index.js",
-    "lint": "eslint ./src --fix",
+    "lint": "eslint ./ --fix",
     "test": "npm test"
   },
-  "author": "Mody",
+  "author": "Moody",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.3",
