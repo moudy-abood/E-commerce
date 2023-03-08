@@ -1,16 +1,22 @@
 const Cart = (sequelize, DataTypes) => {
-  const Cart = sequelize.define('Cart', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
+  const Cart = sequelize.define(
+    'Cart',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+      },
+      status: {
+        type: DataTypes.ENUM('NEW', 'INCOMPLETE', 'COMPLETED'),
+        allowNull: false,
+        defaultValue: 'NEW'
+      }
     },
-    status: {
-      type: DataTypes.ENUM('NEW', 'INCOMPLETE', 'COMPLETED'),
-      allowNull: false,
-      defaultValue: 'NEW'
+    {
+      paranoid: true
     }
-  });
+  );
 
   Cart.associate = model => {
     Cart.belongsTo(model.User, {

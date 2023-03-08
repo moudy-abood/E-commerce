@@ -1,29 +1,35 @@
 const Order = (sequelize, DataTypes) => {
-  const Order = sequelize.define('Order', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    temporaryAddress: {
-      type: DataTypes.JSON
-    },
-    addressId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
+  const Order = sequelize.define(
+    'Order',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+      },
+      temporaryAddress: {
+        type: DataTypes.JSON
+      },
+      addressId: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
 
-    status: {
-      type: DataTypes.ENUM('PENDING', 'DISPATCHED', 'DELIVERED'),
-      allowNull: false,
-      defaultValue: 'PENDING'
+      status: {
+        type: DataTypes.ENUM('PENDING', 'DISPATCHED', 'DELIVERED'),
+        allowNull: false,
+        defaultValue: 'PENDING'
+      },
+      total: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0
+      }
     },
-    total: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      defaultValue: 0
+    {
+      paranoid: true
     }
-  });
+  );
 
   Order.associate = model => {
     Order.belongsTo(model.Address, {
