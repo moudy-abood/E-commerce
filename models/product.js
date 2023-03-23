@@ -25,7 +25,7 @@ const Product = (sequelize, DataTypes) => {
       },
       status: {
         type: DataTypes.STRING,
-        defaultValue: 'available'
+        defaultValue: 'AVAILABLE'
       }
     },
     {

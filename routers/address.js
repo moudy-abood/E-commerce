@@ -4,74 +4,57 @@ const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
 const auth = require('./middleware/auth');
 
-router.post('/address', auth, async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { userId } = req.token;
   try {
     const address = await models.Address.create({ ...req.body, userId });
     return res.status(StatusCodes.CREATED).send(address);
   } catch (e) {
-    res.status(StatusCodes.BAD_REQUEST).send(e);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(e);
   }
 });
 
-router.get('/', async (req, res) => {
-  const _id = req.params.id;
+router.get('/', auth, async (req, res) => {
   try {
-    const userId = await models.User.findOne({ where: { id: _id } });
-    if (!userId) {
-      throw new Error();
-    }
-    const addresses = await models.Address.findAll({ where: { userId: userId.id } });
+    const addresses = await models.Address.findAll();
     res.status(StatusCodes.OK).send(addresses);
   } catch (e) {
-    res.status(StatusCodes.NOT_FOUND).send();
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
   }
 });
 
-router.get('/address/:userId/:addressId', async (req, res) => {
+router.get('/:addressId', auth, async (req, res) => {
   const _id = req.params;
   try {
-    const userId = await models.User.findOne({ where: { id: _id.userId } });
-    if (!userId) {
-      throw new Error();
-    }
     const address = await models.Address.findOne({ where: { id: _id.addressId } });
     res.status(StatusCodes.OK).send(address);
   } catch (e) {
-    res.status(StatusCodes.NOT_FOUND).send();
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
   }
 });
 
-router.put('/address/:userId/:addressId', async (req, res) => {
+router.put('/:addressId', auth, async (req, res) => {
   const _id = req.params;
   const data = req.body;
   try {
-    const userId = await models.User.findOne({ where: { id: _id.userId } });
-    if (!userId) {
-      throw new Error();
-    }
     await models.Address.update(data, { where: { id: _id.addressId } });
     res.status(StatusCodes.OK).send(data);
   } catch (e) {
-    res.status(StatusCodes.NOT_FOUND).send();
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
   }
 });
 
-router.delete('/address/:userId/:addressId', async (req, res) => {
+router.delete('/:addressId', auth, async (req, res) => {
   const _id = req.params;
   try {
-    const userId = await models.User.findOne({ where: { id: _id.userId } });
-    if (!userId) {
-      throw new Error();
-    }
     const addressId = await models.Address.findOne({ where: { id: _id.addressId } });
     if (!addressId) {
-      throw new Error();
+      throw new Error(res.status(StatusCodes.NO_CONTENT));
     }
     await models.Address.destroy({ where: { id: _id.addressId } });
     res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
-    res.status(StatusCodes.NOT_FOUND).send();
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
   }
 });
 

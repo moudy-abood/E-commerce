@@ -8,14 +8,14 @@ const auth = async (req, res, next) => {
     const user = await User.findOne({ where: { id: decoded.userId } });
 
     if (!user) {
-      throw new Error();
+      throw new Error('Token expired or something');
     }
 
     req.token = decoded;
     req.user = user;
     next();
   } catch (e) {
-    res.status(401).send({ error: 'Please authenticate.' });
+    res.status(500).send({ error: 'Please authenticate.' });
   }
 };
 
