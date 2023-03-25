@@ -5,7 +5,7 @@ const userRouter = require('./user');
 const addressRouter = require('./address');
 const productRouter = require('./products');
 
-routes.use(userRouter);
+routes.use('/user', userRouter);
 routes.use('/address', addressRouter);
 routes.use('/product', productRouter);
 

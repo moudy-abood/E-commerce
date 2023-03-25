@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../../models');
+const { StatusCodes } = require('http-status-codes');
 
 const auth = async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (e) {
-    res.status(500).send({ error: 'Please authenticate.' });
+    res.status(StatusCodes.UNAUTHORIZED).send();
   }
 };
 

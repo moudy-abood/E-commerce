@@ -2,13 +2,15 @@ const express = require('express');
 const models = require('../models');
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
+const { checkProduct } = require('./middleware');
 
 router.post('/', async (req, res) => {
   try {
     const product = await models.Product.bulkCreate([...req.body]);
     res.status(StatusCodes.CREATED).send(product);
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    const errorMessage = e.message || e;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
@@ -17,42 +19,42 @@ router.get('/', async (req, res) => {
     const product = await models.Product.findAll();
     res.status(StatusCodes.CREATED).send(product);
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    const errorMessage = e.message || e;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
-router.get('/:id', async (req, res) => {
-  const _id = req.params.id;
+router.get('/:id', checkProduct, async (req, res) => {
+  const { id } = req.params;
   try {
-    const product = await models.Product.findOne({ where: { id: _id } });
+    const product = await models.Product.findOne({ where: { id } });
     res.status(StatusCodes.OK).send(product);
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    const errorMessage = e.message || e;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
-router.put('/:id', async (req, res) => {
-  const _id = req.params.id;
+router.put('/:id', checkProduct, async (req, res) => {
+  const { id } = req.params;
   const data = req.body;
   try {
-    await models.Product.update(data, { where: { id: _id } });
+    await models.Product.update(data, { where: { id } });
     res.status(StatusCodes.OK).send(data);
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    const errorMessage = e.message || e;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
-router.delete('/:id', async (req, res) => {
-  const _id = req.params.id;
+router.delete('/:id', checkProduct, async (req, res) => {
+  const { id } = req.params;
   try {
-    const productId = await models.Product.findOne({ where: { id: _id } });
-    if (!productId) {
-      throw new Error('not found');
-    }
-    await models.Product.destroy({ where: { id: _id } });
+    await models.Product.destroy({ where: { id } });
     res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    const errorMessage = e.message || e;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 

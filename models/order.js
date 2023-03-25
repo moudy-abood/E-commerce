@@ -17,7 +17,6 @@ const Order = (sequelize, DataTypes) => {
 
       status: {
         type: DataTypes.ENUM('PENDING', 'DISPATCHED', 'DELIVERED'),
-        allowNull: false,
         defaultValue: 'PENDING'
       },
       total: {
