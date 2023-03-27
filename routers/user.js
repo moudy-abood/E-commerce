@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
@@ -21,27 +21,27 @@ router.put('/', auth, async (req, res) => {
   const { userId: id } = req.token;
   try {
     await models.User.update(data, { where: { id } });
-    res.status(StatusCodes.OK).send(data);
+    return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
 router.get('/profile', auth, async (req, res) => {
   try {
     const user = await models.User.findOne();
-    res.status(StatusCodes.OK).send(user);
+    return res.status(StatusCodes.OK).send(user);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 router.delete('/', auth, async (req, res) => {
   const { userId: id } = req.token;
   try {
     await models.User.destroy({ where: { id } });
-    res.status(StatusCodes.OK).send('deleted');
+    return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);

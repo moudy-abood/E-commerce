@@ -8,7 +8,7 @@ async function checkProduct(req, res, next) {
     req.product = product;
     return product ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(e);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(e);
   }
 }
 

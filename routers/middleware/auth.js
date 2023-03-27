@@ -16,7 +16,7 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (e) {
-    res.status(StatusCodes.UNAUTHORIZED).send();
+    return res.status(StatusCodes.UNAUTHORIZED).send();
   }
 };
 

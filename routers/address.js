@@ -10,16 +10,18 @@ router.post('/', auth, async (req, res) => {
     await models.Address.create({ ...req.body, userId });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(e);
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
 router.get('/', auth, async (req, res) => {
   try {
     const addresses = await models.Address.findAll();
-    res.status(StatusCodes.OK).send(addresses);
+    return res.status(StatusCodes.OK).send(addresses);
   } catch (e) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
@@ -27,10 +29,10 @@ router.get('/:id', auth, checkAddress, async (req, res) => {
   const { id } = req.params;
   try {
     const address = await models.Address.findOne({ where: { id } });
-    res.status(StatusCodes.OK).send(address);
+    return res.status(StatusCodes.OK).send(address);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
@@ -39,10 +41,10 @@ router.put('/:id', auth, checkAddress, async (req, res) => {
   const data = req.body;
   try {
     await models.Address.update(data, { where: { id } });
-    res.status(StatusCodes.OK).send(data);
+    return res.status(StatusCodes.OK).send(data);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
@@ -50,10 +52,10 @@ router.delete('/:id', auth, checkAddress, async (req, res) => {
   const { id } = req.params;
   try {
     await models.Address.destroy({ where: { id } });
-    res.status(StatusCodes.OK).send('deleted');
+    return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
