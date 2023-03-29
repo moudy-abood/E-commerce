@@ -8,7 +8,7 @@ router.post('/', auth, async (req, res) => {
   const { userId } = req.token;
   try {
     await models.Cart.create({ userId });
-    return res.status(StatusCodes.OK).send();
+    return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e || e.message;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
