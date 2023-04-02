@@ -15,10 +15,10 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-router.get('/', auth, async (req, res) => {
-  const { userId } = req.token;
+router.get('/:id', auth, async (req, res) => {
+  const { id } = req.params;
   try {
-    const cart = await models.Cart.findOne({ where: { userId } });
+    const cart = await models.Cart.findOne({ where: { id } });
     return res.status(StatusCodes.OK).send(cart);
   } catch (e) {
     const errorMessage = e || e.message;

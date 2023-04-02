@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
 
     req.token = decoded;
     req.user = user;
-    next();
+    return next();
   } catch (e) {
     return res.status(StatusCodes.UNAUTHORIZED).send();
   }

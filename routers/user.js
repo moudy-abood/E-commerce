@@ -37,8 +37,8 @@ router.get('/profile', auth, async (req, res) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
-router.delete('/', auth, async (req, res) => {
-  const { userId: id } = req.token;
+router.delete('/:id', auth, async (req, res) => {
+  const { id } = req.params;
   try {
     await models.User.destroy({ where: { id } });
     return res.status(StatusCodes.OK).send('deleted');

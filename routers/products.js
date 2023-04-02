@@ -7,17 +7,17 @@ const { checkProduct } = require('./middleware');
 router.post('/', async (req, res) => {
   try {
     const product = await models.Product.bulkCreate([...req.body]);
-    res.status(StatusCodes.CREATED).send(product);
+    return res.status(StatusCodes.CREATED).send(product);
   } catch (e) {
     const errorMessage = e.message || e;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
 router.get('/', async (req, res) => {
   try {
-    const product = await models.Product.findAll();
-    return res.status(StatusCodes.CREATED).send(product);
+    await models.Product.findAll();
+    return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
