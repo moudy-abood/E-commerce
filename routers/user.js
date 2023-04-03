@@ -2,47 +2,49 @@ const express = require('express');
 const models = require('../models');
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
+const tokenGen = require('../utils/token');
+const auth = require('./middleware/auth');
 
-router.post('/user', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const user = await models.User.create({ ...req.body });
-    return res.status(StatusCodes.CREATED).send(user);
+    const token = tokenGen({ userId: user.id });
+    return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
-    res.status(401).send();
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
-router.get('/user/:id', async (req, res) => {
-  const { id: _id } = req.params;
-  // const { params: {
-  //   id: _id
-  // }} = req;
-  try {
-    const user = await models.User.findOne({ where: { id: _id } });
-    res.status(StatusCodes.OK).send(user);
-  } catch (e) {
-    res.status(StatusCodes.NOT_FOUND).send();
-  }
-});
-
-router.put('/user/:id', async (req, res) => {
-  const _id = req.params.id;
+router.put('/', auth, async (req, res) => {
   const data = req.body;
+  const { userId: id } = req.token;
   try {
-    await models.User.update(data, { where: { id: _id } });
-    res.status(StatusCodes.OK).send(data);
+    await models.User.update(data, { where: { id } });
+    return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
-    res.status(StatusCodes.NOT_FOUND).send();
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 
-router.delete('/user/:id', async (req, res) => {
-  const _id = req.params.id;
+router.get('/profile', auth, async (req, res) => {
   try {
-    await models.User.destroy({ where: { id: _id } });
-    res.status(StatusCodes.OK).send('deleted');
+    const user = await models.User.findOne();
+    return res.status(StatusCodes.OK).send(user);
   } catch (e) {
-    res.status(StatusCodes.NOT_FOUND).send();
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+});
+router.delete('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await models.User.destroy({ where: { id } });
+    return res.status(StatusCodes.OK).send('deleted');
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
 

@@ -1,14 +1,20 @@
 const Item = (sequelize, DataTypes) => {
-  const Item = sequelize.define('Item', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
+  const Item = sequelize.define(
+    'Item',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+      },
+      quantity: {
+        type: DataTypes.INTEGER
+      }
     },
-    quantity: {
-      type: DataTypes.INTEGER
+    {
+      paranoid: true
     }
-  });
+  );
 
   Item.associate = model => {
     Item.belongsTo(model.Product, {
