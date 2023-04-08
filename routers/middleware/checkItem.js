@@ -8,7 +8,8 @@ async function checkItem(req, res, next) {
     req.item = item;
     return item ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(e);
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 

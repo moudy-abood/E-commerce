@@ -4,13 +4,16 @@ const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
 const { auth, checkItem } = require('./middleware');
 
-router.post('/:id', auth, async (req, res) => {
+router.post('/cart/:id/item', auth, async (req, res) => {
   const { id } = req.params;
-  const { userId } = req.token;
   try {
-    const product = await models.Product.findOne({ where: { id } });
-    const cart = await models.Cart.findOne({ where: { userId } });
-    const item = await models.Item.create({ ...req.body, productId: product.id, cartId: cart.id });
+    const cart = await models.Cart.findOne({ where: { id } });
+    await models.Cart.update({ status: 'INCOMPLETE' }, { where: { id } });
+    const items = req.body.map(e => {
+      e.cartId = cart.id;
+      return e;
+    });
+    const item = await models.Item.bulkCreate(items);
     return res.status(StatusCodes.OK).send(item);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -18,7 +21,7 @@ router.post('/:id', auth, async (req, res) => {
   }
 });
 
-router.put('/:id', auth, checkItem, async (req, res) => {
+router.put('/item/:id', auth, checkItem, async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   try {
@@ -30,11 +33,11 @@ router.put('/:id', auth, checkItem, async (req, res) => {
   }
 });
 
-router.delete('/:id', auth, checkItem, async (req, res) => {
+router.delete('/item/:id', auth, checkItem, async (req, res) => {
   const { id } = req.params;
   try {
     await models.Item.destroy({ where: { id } });
-    res.status(StatusCodes.OK).send('deleted');
+    return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);

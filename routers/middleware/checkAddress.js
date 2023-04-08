@@ -8,7 +8,8 @@ async function checkAddress(req, res, next) {
     req.address = address;
     return address ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(e);
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 

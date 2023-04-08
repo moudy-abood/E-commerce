@@ -12,7 +12,7 @@ routes.use('/user', userRouter);
 routes.use('/address', addressRouter);
 routes.use('/product', productRouter);
 routes.use('/cart', cartRouter);
-routes.use('/item', itemRouter);
+routes.use('/', itemRouter);
 routes.use('/order', orderRouter);
 
 module.exports = routes;
