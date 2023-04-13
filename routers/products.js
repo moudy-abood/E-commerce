@@ -40,7 +40,7 @@ router.put('/:id', checkProduct, async (req, res) => {
   const data = req.body;
   try {
     await models.Product.update(data, { where: { id } });
-    return res.status(StatusCodes.OK).send(data);
+    return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
