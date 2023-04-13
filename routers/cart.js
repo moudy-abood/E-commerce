@@ -2,7 +2,7 @@ const express = require('express');
 const models = require('../models');
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
-const { auth, checkAvailableCart, checkItem } = require('./middleware');
+const { auth, checkAvailableCart, checkItem, checkCart } = require('./middleware');
 
 router.post('/', auth, checkAvailableCart, async (req, res) => {
   const { userId } = req.token;
@@ -15,7 +15,7 @@ router.post('/', auth, checkAvailableCart, async (req, res) => {
   }
 });
 
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', auth, checkCart, async (req, res) => {
   const { id } = req.params;
   try {
     const cart = await models.Cart.findOne({
@@ -29,7 +29,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-router.post('/:cartId/item', auth, async (req, res) => {
+router.post('/:cartId/item', auth, checkCart, async (req, res) => {
   const { cartId } = req.params;
   try {
     await models.Cart.update({ status: 'INCOMPLETE' }, { where: { id: cartId } });
@@ -45,7 +45,7 @@ router.post('/:cartId/item', auth, async (req, res) => {
   }
 });
 
-router.put('/:cartId/item/:id', auth, checkItem, async (req, res) => {
+router.put('/:cartId/item/:id', auth, checkCart, checkItem, async (req, res) => {
   const { id } = req.params;
   const { quantity } = req.body;
   try {
@@ -57,7 +57,7 @@ router.put('/:cartId/item/:id', auth, checkItem, async (req, res) => {
   }
 });
 
-router.delete('/:cartId/item/:id', auth, checkItem, async (req, res) => {
+router.delete('/:cartId/item/:id', auth, checkCart, checkItem, async (req, res) => {
   const { id } = req.params;
   try {
     await models.Item.destroy({ where: { id } });
