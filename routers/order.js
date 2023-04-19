@@ -16,8 +16,8 @@ router.post('/', auth, async (req, res) => {
       return res.status(StatusCodes.NOT_ACCEPTABLE).send();
     }
     await models.Cart.update({ status: 'COMPLETED' }, { where: { id: cartId } });
-    const order = await models.Order.create({ ...req.body });
-    return res.status(StatusCodes.CREATED).send(order);
+    await models.Order.create({ ...req.body });
+    return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
@@ -29,8 +29,14 @@ router.get('/:id', auth, checkOrder, async (req, res) => {
   try {
     const order = await models.Order.findOne({
       where: { id },
-      include: { model: models.Cart, include: { model: models.Item } }
+      include: {
+        model: models.Cart,
+        include: { model: models.Item, include: { model: models.Product } }
+      }
     });
+    order.items = order.Cart.Items;
+    delete order.Cart;
+
     return res.status(StatusCodes.OK).send(order);
   } catch (e) {
     const errorMessage = e.message || e;

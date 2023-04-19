@@ -2,7 +2,7 @@ const { StatusCodes } = require('http-status-codes');
 const { Cart } = require('../../models');
 
 async function checkCart(req, res, next) {
-  const { cartId } = req.params;
+  const { cartId } = req.params || req.body;
   try {
     const cart = await Cart.findOne({ where: { id: cartId } });
     req.cart = cart;
