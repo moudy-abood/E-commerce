@@ -22,7 +22,7 @@ const sequelize = new Sequelize(options.database, options.username, options.pass
 sequelize
   .authenticate()
   .then(() => {
-    sequelize.sync({ force: true });
+    sequelize.sync();
     console.log('Connection has been established successfully.');
   })
   .catch(err => {

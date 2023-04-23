@@ -15,11 +15,11 @@ router.post('/', auth, checkAvailableCart, async (req, res) => {
   }
 });
 
-router.get('/:id', auth, checkCart, async (req, res) => {
-  const { id } = req.params;
+router.get('/:cartId', auth, checkCart, async (req, res) => {
+  const { cartId } = req.params;
   try {
     const cart = await models.Cart.findOne({
-      where: { id },
+      where: { cartId },
       include: { model: models.Item, include: { model: models.Product } }
     });
     return res.status(StatusCodes.OK).send(cart);
