@@ -19,7 +19,7 @@ router.get('/:cartId', auth, checkCart, async (req, res) => {
   const { cartId } = req.params;
   try {
     const cart = await models.Cart.findOne({
-      where: { cartId },
+      where: { id: cartId },
       include: { model: models.Item, include: { model: models.Product } }
     });
     return res.status(StatusCodes.OK).send(cart);
