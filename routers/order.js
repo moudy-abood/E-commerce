@@ -2,7 +2,7 @@ const express = require('express');
 const models = require('../models');
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
-const { auth, checkOrder, checkCart } = require('./middleware');
+const { auth, checkOrder, checkCart, checkAdmin } = require('./middleware');
 
 router.post('/', auth, checkCart, async (req, res) => {
   const { cartId } = req.body;
@@ -32,6 +32,35 @@ router.get('/:id', auth, checkOrder, async (req, res) => {
     delete order.Cart;
 
     return res.status(StatusCodes.OK).send(order);
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+});
+
+router.put('/:id', auth, checkAdmin, checkOrder, async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  try {
+    await models.Order.update(data, {
+      where: { id },
+      include: {
+        model: models.Cart,
+        include: { model: models.Item, include: { model: models.Product } }
+      }
+    });
+    return res.status(StatusCodes.NO_CONTENT).send();
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+});
+
+router.delete('/:id', auth, checkAdmin, checkOrder, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await models.Order.destroy({ where: { id } });
+    return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);

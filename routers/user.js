@@ -3,7 +3,7 @@ const models = require('../models');
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
 const tokenGen = require('../utils/token');
-const auth = require('./middleware/auth');
+const { auth, checkAdmin } = require('./middleware');
 
 router.post('/', async (req, res) => {
   try {
@@ -37,7 +37,7 @@ router.get('/profile', auth, async (req, res) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, checkAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     await models.User.destroy({ where: { id } });

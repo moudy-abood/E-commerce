@@ -2,9 +2,9 @@ const express = require('express');
 const models = require('../models');
 const router = express.Router();
 const { StatusCodes } = require('http-status-codes');
-const { checkProduct } = require('./middleware');
+const { checkProduct, auth, checkAdmin } = require('./middleware');
 
-router.post('/', async (req, res) => {
+router.post('/', auth, checkAdmin, async (req, res) => {
   try {
     const product = await models.Product.bulkCreate([...req.body]);
     return res.status(StatusCodes.CREATED).send(product);
@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', auth, checkAdmin, async (req, res) => {
   try {
     await models.Product.findAll();
     return res.status(StatusCodes.CREATED).send();
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', checkProduct, async (req, res) => {
+router.get('/:id', checkProduct, auth, checkAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     const product = await models.Product.findOne({ where: { id } });
@@ -35,7 +35,7 @@ router.get('/:id', checkProduct, async (req, res) => {
   }
 });
 
-router.put('/:id', checkProduct, async (req, res) => {
+router.put('/:id', checkProduct, auth, checkAdmin, async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   try {
@@ -47,7 +47,7 @@ router.put('/:id', checkProduct, async (req, res) => {
   }
 });
 
-router.delete('/:id', checkProduct, async (req, res) => {
+router.delete('/:id', checkProduct, auth, checkAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     await models.Product.destroy({ where: { id } });

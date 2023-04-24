@@ -5,6 +5,7 @@ const checkItem = require('./checkItem');
 const checkAvailableCart = require('./checkAvailableCart');
 const checkCart = require('./checkCart');
 const checkOrder = require('./checkOrder');
+const checkAdmin = require('./checkAdmin');
 
 module.exports = {
   checkProduct,
@@ -13,5 +14,6 @@ module.exports = {
   checkItem,
   checkAvailableCart,
   checkCart,
-  checkOrder
+  checkOrder,
+  checkAdmin
 };
