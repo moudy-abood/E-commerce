@@ -25,10 +25,10 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-router.get('/:id', auth, checkAddress, async (req, res) => {
-  const { id } = req.params;
+router.get('/:uuid', auth, checkAddress, async (req, res) => {
+  const { uuid } = req.params;
   try {
-    const address = await models.Address.findOne({ where: { id } });
+    const address = await models.Address.findOne({ where: { uuid } });
     return res.status(StatusCodes.OK).send(address);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -36,11 +36,11 @@ router.get('/:id', auth, checkAddress, async (req, res) => {
   }
 });
 
-router.put('/:id', auth, checkAddress, async (req, res) => {
-  const { id } = req.params;
+router.put('/:uuid', auth, checkAddress, async (req, res) => {
+  const { uuid } = req.params;
   const data = req.body;
   try {
-    await models.Address.update(data, { where: { id } });
+    await models.Address.update(data, { where: { uuid } });
     return res.status(StatusCodes.OK).send(data);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -48,10 +48,10 @@ router.put('/:id', auth, checkAddress, async (req, res) => {
   }
 });
 
-router.delete('/:id', auth, checkAddress, async (req, res) => {
-  const { id } = req.params;
+router.delete('/:uuid', auth, checkAddress, async (req, res) => {
+  const { uuid } = req.params;
   try {
-    await models.Address.destroy({ where: { id } });
+    await models.Address.destroy({ where: { uuid } });
     return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;

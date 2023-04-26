@@ -7,6 +7,11 @@ const Address = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true
       },
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
+      },
       country: {
         type: DataTypes.STRING,
         allowNull: false

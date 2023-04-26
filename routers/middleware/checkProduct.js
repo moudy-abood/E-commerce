@@ -2,9 +2,9 @@ const { StatusCodes } = require('http-status-codes');
 const { Product } = require('../../models');
 
 async function checkProduct(req, res, next) {
-  const { id } = req.params;
+  const { uuid } = req.params;
   try {
-    const product = await Product.findOne({ where: { id } });
+    const product = await Product.findOne({ where: { uuid } });
     req.product = product;
     return product ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {

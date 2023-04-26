@@ -5,9 +5,9 @@ const { StatusCodes } = require('http-status-codes');
 const { auth, checkOrder, checkCart, checkAdmin } = require('./middleware');
 
 router.post('/', auth, checkCart, async (req, res) => {
-  const { cartId } = req.body;
+  const { cartUuid } = req.body;
   try {
-    await models.Cart.update({ status: 'COMPLETED' }, { where: { id: cartId } });
+    await models.Cart.update({ status: 'COMPLETED' }, { where: { uuid: cartUuid } });
     await models.Order.create({ ...req.body });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
@@ -16,11 +16,11 @@ router.post('/', auth, checkCart, async (req, res) => {
   }
 });
 
-router.get('/:id', auth, checkOrder, async (req, res) => {
-  const { id } = req.params;
+router.get('/:uuid', auth, checkOrder, async (req, res) => {
+  const { uuid } = req.params;
   try {
     const order = await models.Order.findOne({
-      where: { id },
+      where: { uuid },
       include: {
         model: models.Cart,
         include: { model: models.Item, include: { model: models.Product } }
@@ -38,17 +38,20 @@ router.get('/:id', auth, checkOrder, async (req, res) => {
   }
 });
 
-router.put('/:id', auth, checkAdmin, checkOrder, async (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
+router.put('/:uuid/:status', auth, checkAdmin, checkOrder, async (req, res) => {
+  const { uuid } = req.params;
+  const { status } = req.params;
   try {
-    await models.Order.update(data, {
-      where: { id },
-      include: {
-        model: models.Cart,
-        include: { model: models.Item, include: { model: models.Product } }
+    await models.Order.update(
+      { status: status },
+      {
+        where: { uuid },
+        include: {
+          model: models.Cart,
+          include: { model: models.Item, include: { model: models.Product } }
+        }
       }
-    });
+    );
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -56,10 +59,10 @@ router.put('/:id', auth, checkAdmin, checkOrder, async (req, res) => {
   }
 });
 
-router.delete('/:id', auth, checkAdmin, checkOrder, async (req, res) => {
-  const { id } = req.params;
+router.delete('/:uuid', auth, checkAdmin, checkOrder, async (req, res) => {
+  const { uuid } = req.params;
   try {
-    await models.Order.destroy({ where: { id } });
+    await models.Order.destroy({ where: { uuid } });
     return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;

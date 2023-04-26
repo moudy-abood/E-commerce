@@ -7,6 +7,11 @@ const Order = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true
       },
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
+      },
       temporaryAddress: {
         type: DataTypes.JSON
       },

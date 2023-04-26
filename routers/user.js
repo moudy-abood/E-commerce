@@ -8,7 +8,7 @@ const { auth, checkAdmin } = require('./middleware');
 router.post('/', async (req, res) => {
   try {
     const user = await models.User.create({ ...req.body });
-    const token = tokenGen({ userId: user.id });
+    const token = tokenGen({ userId: user.uuid });
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
     const errorMessage = e.message || e;
@@ -18,9 +18,9 @@ router.post('/', async (req, res) => {
 
 router.put('/', auth, async (req, res) => {
   const data = req.body;
-  const { userId: id } = req.token;
+  const { userId: uuid } = req.token;
   try {
-    await models.User.update(data, { where: { id } });
+    await models.User.update(data, { where: { uuid } });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -37,10 +37,10 @@ router.get('/profile', auth, async (req, res) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 });
-router.delete('/:id', auth, checkAdmin, async (req, res) => {
-  const { id } = req.params;
+router.delete('/:uuid', auth, checkAdmin, async (req, res) => {
+  const { uuid } = req.params;
   try {
-    await models.User.destroy({ where: { id } });
+    await models.User.destroy({ where: { uuid } });
     return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;

@@ -2,9 +2,9 @@ const { StatusCodes } = require('http-status-codes');
 const { Order } = require('../../models');
 
 async function checkOrder(req, res, next) {
-  const { id } = req.params;
+  const { uuid } = req.params;
   try {
-    const order = await Order.findOne({ where: { id } });
+    const order = await Order.findOne({ where: { uuid } });
     return order ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {
     const errorMessage = e.message || e;

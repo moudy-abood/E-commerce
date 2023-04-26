@@ -15,11 +15,11 @@ router.post('/', auth, checkAvailableCart, async (req, res) => {
   }
 });
 
-router.get('/:cartId', auth, checkCart, async (req, res) => {
-  const { cartId } = req.params;
+router.get('/:cartUuid', auth, checkCart, async (req, res) => {
+  const { cartUuid } = req.params;
   try {
     const cart = await models.Cart.findOne({
-      where: { id: cartId },
+      where: { uuid: cartUuid },
       include: { model: models.Item, include: { model: models.Product } }
     });
     return res.status(StatusCodes.OK).send(cart);
@@ -29,12 +29,12 @@ router.get('/:cartId', auth, checkCart, async (req, res) => {
   }
 });
 
-router.post('/:cartId/item', auth, checkCart, async (req, res) => {
-  const { cartId } = req.params;
+router.post('/:cartUuid/item', auth, checkCart, async (req, res) => {
+  const { cartUuid } = req.params;
   try {
-    await models.Cart.update({ status: 'INCOMPLETE' }, { where: { id: cartId } });
+    await models.Cart.update({ status: 'INCOMPLETE' }, { where: { uuid: cartUuid } });
     const items = req.body.map(e => {
-      e.cartId = cartId;
+      e.cartUuid = cartUuid;
       return e;
     });
     await models.Item.bulkCreate(items);
@@ -45,11 +45,11 @@ router.post('/:cartId/item', auth, checkCart, async (req, res) => {
   }
 });
 
-router.put('/:cartId/item/:id', auth, checkCart, checkItem, async (req, res) => {
-  const { id } = req.params;
+router.put('/:cartUuid/item/:uuid', auth, checkCart, checkItem, async (req, res) => {
+  const { uuid } = req.params;
   const { quantity } = req.body;
   try {
-    await models.Item.update({ quantity }, { where: { id } });
+    await models.Item.update({ quantity }, { where: { uuid } });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -57,10 +57,10 @@ router.put('/:cartId/item/:id', auth, checkCart, checkItem, async (req, res) => 
   }
 });
 
-router.delete('/:cartId/item/:id', auth, checkCart, checkItem, async (req, res) => {
-  const { id } = req.params;
+router.delete('/:cartUuid/item/:uuid', auth, checkCart, checkItem, async (req, res) => {
+  const { uuid } = req.params;
   try {
-    await models.Item.destroy({ where: { id } });
+    await models.Item.destroy({ where: { uuid } });
     return res.status(StatusCodes.OK).send('deleted');
   } catch (e) {
     const errorMessage = e.message || e;

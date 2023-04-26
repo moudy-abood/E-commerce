@@ -7,6 +7,11 @@ const Product = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true
       },
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
+      },
       category: {
         type: DataTypes.STRING,
         allowNull: false

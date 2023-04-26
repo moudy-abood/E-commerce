@@ -7,6 +7,11 @@ const Cart = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true
       },
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
+      },
       status: {
         type: DataTypes.ENUM('NEW', 'INCOMPLETE', 'COMPLETED'),
         allowNull: false,
