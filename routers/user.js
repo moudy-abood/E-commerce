@@ -8,7 +8,7 @@ const { auth, checkAdmin } = require('./middleware');
 router.post('/', async (req, res) => {
   try {
     const user = await models.User.create({ ...req.body });
-    const token = tokenGen({ userId: user.uuid });
+    const token = tokenGen({ userId: user.id });
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
     const errorMessage = e.message || e;

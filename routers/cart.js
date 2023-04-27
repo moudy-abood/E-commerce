@@ -31,10 +31,11 @@ router.get('/:cartUuid', auth, checkCart, async (req, res) => {
 
 router.post('/:cartUuid/item', auth, checkCart, async (req, res) => {
   const { cartUuid } = req.params;
+  const cartId = req.cart.id;
   try {
     await models.Cart.update({ status: 'INCOMPLETE' }, { where: { uuid: cartUuid } });
     const items = req.body.map(e => {
-      e.cartUuid = cartUuid;
+      e.cartId = cartId;
       return e;
     });
     await models.Item.bulkCreate(items);

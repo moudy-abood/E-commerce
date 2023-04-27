@@ -42,16 +42,7 @@ router.put('/:uuid/:status', auth, checkAdmin, checkOrder, async (req, res) => {
   const { uuid } = req.params;
   const { status } = req.params;
   try {
-    await models.Order.update(
-      { status: status },
-      {
-        where: { uuid },
-        include: {
-          model: models.Cart,
-          include: { model: models.Item, include: { model: models.Product } }
-        }
-      }
-    );
+    await models.Order.update({ status }, { where: { uuid } });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;

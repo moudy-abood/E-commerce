@@ -14,7 +14,7 @@ router.post('/', auth, checkAdmin, async (req, res) => {
   }
 });
 
-router.get('/', auth, checkAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     await models.Product.findAll();
     return res.status(StatusCodes.CREATED).send();
@@ -24,7 +24,7 @@ router.get('/', auth, checkAdmin, async (req, res) => {
   }
 });
 
-router.get('/:uuid', checkProduct, auth, checkAdmin, async (req, res) => {
+router.get('/:uuid', async (req, res) => {
   const { uuid } = req.params;
   try {
     const product = await models.Product.findOne({ where: { uuid } });
