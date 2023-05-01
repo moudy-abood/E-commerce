@@ -11,9 +11,9 @@ async function createProducts(req, res) {
   }
 }
 
-async function findProducts(req, res) {
+async function listAllProducts(req, res) {
   try {
-    const products = await models.Product.findAll();
+    const products = await models.Product.findAll({ attributes: { exclude: ['id'] } });
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -24,7 +24,10 @@ async function findProducts(req, res) {
 async function findProduct(req, res) {
   const { uuid } = req.params;
   try {
-    const product = await models.Product.findOne({ where: { uuid } });
+    const product = await models.Product.findOne({
+      where: { uuid },
+      attributes: { exclude: ['id'] }
+    });
     return res.status(StatusCodes.OK).send(product);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -48,11 +51,13 @@ async function deleteProduct(req, res) {
   const { uuid } = req.params;
   try {
     await models.Product.destroy({ where: { uuid } });
-    return res.status(StatusCodes.OK).send('deleted');
+    return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-module.exports = { createProducts, findProducts, findProduct, updateProduct, deleteProduct };
+const controller = { createProducts, listAllProducts, findProduct, updateProduct, deleteProduct };
+
+module.exports = controller;

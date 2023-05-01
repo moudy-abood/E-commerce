@@ -23,6 +23,7 @@ async function findOrder(req, res) {
         model: models.Cart,
         include: { model: models.Item, include: { model: models.Product } }
       },
+      attributes: { exclude: ['id'] },
       nest: true,
       raw: true
     });
@@ -52,11 +53,13 @@ async function deleteOrder(req, res) {
   const { uuid } = req.params;
   try {
     await models.Order.destroy({ where: { uuid } });
-    return res.status(StatusCodes.OK).send('deleted');
+    return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-module.exports = { createOrder, findOrder, updateOrder, deleteOrder };
+const controller = { createOrder, findOrder, updateOrder, deleteOrder };
+
+module.exports = controller;

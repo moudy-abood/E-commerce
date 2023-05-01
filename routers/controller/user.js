@@ -25,10 +25,13 @@ async function UpdateUser(req, res) {
   }
 }
 
-async function findUser(req, res) {
+async function getUser(req, res) {
   const { uuid } = req.user;
   try {
-    const user = await models.User.findOne({ where: { uuid } });
+    const user = await models.User.findOne({
+      where: { uuid },
+      attributes: { exclude: ['id'] }
+    });
     return res.status(StatusCodes.OK).send(user);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -40,11 +43,13 @@ async function deleteUser(req, res) {
   const { uuid } = req.params;
   try {
     await models.User.destroy({ where: { uuid } });
-    return res.status(StatusCodes.OK).send('deleted');
+    return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-module.exports = { createUser, UpdateUser, findUser, deleteUser };
+const controller = { createUser, UpdateUser, getUser, deleteUser };
+
+module.exports = controller;

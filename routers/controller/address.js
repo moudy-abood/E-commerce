@@ -12,10 +12,13 @@ async function createAddress(req, res) {
   }
 }
 
-async function findAllAddresses(req, res) {
+async function listUserAddresses(req, res) {
   const { id } = req.user;
   try {
-    const addresses = await models.Address.findAll({ where: { userId: id } });
+    const addresses = await models.Address.findAll({
+      where: { userId: id },
+      attributes: { exclude: ['id'] }
+    });
     return res.status(StatusCodes.OK).send(addresses);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -23,10 +26,13 @@ async function findAllAddresses(req, res) {
   }
 }
 
-async function findAddress(req, res) {
+async function getUserAddress(req, res) {
   const { uuid } = req.params;
   try {
-    const address = await models.Address.findOne({ where: { uuid } });
+    const address = await models.Address.findOne({
+      where: { uuid },
+      attributes: { exclude: ['id'] }
+    });
     return res.status(StatusCodes.OK).send(address);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -50,11 +56,18 @@ async function deleteAddress(req, res) {
   const { uuid } = req.params;
   try {
     await models.Address.destroy({ where: { uuid } });
-    return res.status(StatusCodes.OK).send('deleted');
+    return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
   }
 }
 
-module.exports = { createAddress, findAllAddresses, findAddress, updateAddress, deleteAddress };
+const controller = {
+  createAddress,
+  listUserAddresses,
+  getUserAddress,
+  updateAddress,
+  deleteAddress
+};
+module.exports = controller;
