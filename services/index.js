@@ -35,7 +35,7 @@ const cartServices = {
 };
 
 const itemServices = {
-  create: item.bulkCreate,
+  bulkCreate: item.bulkCreate,
   update: item.update,
   remove: item.remove
 };

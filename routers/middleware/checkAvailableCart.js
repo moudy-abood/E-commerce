@@ -3,7 +3,7 @@ const { Cart } = require('../../models');
 const { Op } = require('sequelize');
 
 async function checkAvailableCart(req, res, next) {
-  const { userId } = req.token;
+  const { id: userId } = req.user;
   try {
     const cart = await Cart.findOne({
       where: {
