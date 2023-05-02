@@ -1,10 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
-const models = require('../../models');
+const { userServices } = require('../../services');
 const tokenGen = require('../../utils/token');
 
 async function createUser(req, res) {
   try {
-    const user = await models.User.create({ ...req.body });
+    const user = await userServices.create({ ...req.body });
     const token = tokenGen({ userId: user.id });
     return res.status(StatusCodes.CREATED).send({ token });
   } catch (e) {
@@ -17,7 +17,7 @@ async function UpdateUser(req, res) {
   const data = req.body;
   const { uuid } = req.user;
   try {
-    await models.User.update(data, { where: { uuid } });
+    await userServices.update(data, { where: { uuid } });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -28,7 +28,7 @@ async function UpdateUser(req, res) {
 async function getUser(req, res) {
   const { uuid } = req.user;
   try {
-    const user = await models.User.findOne({
+    const user = await userServices.findOne({
       where: { uuid },
       attributes: { exclude: ['id'] }
     });
@@ -42,7 +42,7 @@ async function getUser(req, res) {
 async function deleteUser(req, res) {
   const { uuid } = req.params;
   try {
-    await models.User.destroy({ where: { uuid } });
+    await userServices.remove({ where: { uuid } });
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

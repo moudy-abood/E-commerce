@@ -1,9 +1,9 @@
 const { StatusCodes } = require('http-status-codes');
-const models = require('../../models');
+const { productServices } = require('../../services');
 
 async function createProducts(req, res) {
   try {
-    const product = await models.Product.bulkCreate([...req.body]);
+    const product = await productServices.bulkCreate([...req.body]);
     return res.status(StatusCodes.CREATED).send(product);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -13,7 +13,7 @@ async function createProducts(req, res) {
 
 async function listAllProducts(req, res) {
   try {
-    const products = await models.Product.findAll({ attributes: { exclude: ['id'] } });
+    const products = await productServices.findAll({ attributes: { exclude: ['id'] } });
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -24,7 +24,7 @@ async function listAllProducts(req, res) {
 async function findProduct(req, res) {
   const { uuid } = req.params;
   try {
-    const product = await models.Product.findOne({
+    const product = await productServices.findOne({
       where: { uuid },
       attributes: { exclude: ['id'] }
     });
@@ -39,7 +39,7 @@ async function updateProduct(req, res) {
   const { uuid } = req.params;
   const data = req.body;
   try {
-    await models.Product.update(data, { where: { uuid } });
+    await productServices.update(data, { where: { uuid } });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -50,7 +50,7 @@ async function updateProduct(req, res) {
 async function deleteProduct(req, res) {
   const { uuid } = req.params;
   try {
-    await models.Product.destroy({ where: { uuid } });
+    await productServices.remove({ where: { uuid } });
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

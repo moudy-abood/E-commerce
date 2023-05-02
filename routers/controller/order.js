@@ -1,12 +1,13 @@
 const { StatusCodes } = require('http-status-codes');
 const models = require('../../models');
+const { orderServices, cartServices } = require('../../services');
 
 async function createOrder(req, res) {
   const { cartUuid } = req.body;
   const { id } = req.cart;
   try {
-    await models.Cart.update({ status: 'COMPLETED' }, { where: { uuid: cartUuid } });
-    await models.Order.create({ ...req.body, cartId: id });
+    await cartServices.update({ status: 'COMPLETED' }, { where: { uuid: cartUuid } });
+    await orderServices.create({ ...req.body, cartId: id });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -17,7 +18,7 @@ async function createOrder(req, res) {
 async function findOrder(req, res) {
   const { uuid } = req.params;
   try {
-    const order = await models.Order.findOne({
+    const order = await orderServices.findOne({
       where: { uuid },
       include: {
         model: models.Cart,
@@ -41,7 +42,7 @@ async function updateOrder(req, res) {
   const { uuid } = req.params;
   const { status } = req.params;
   try {
-    await models.Order.update({ status }, { where: { uuid } });
+    await orderServices.update({ status }, { where: { uuid } });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -52,7 +53,7 @@ async function updateOrder(req, res) {
 async function deleteOrder(req, res) {
   const { uuid } = req.params;
   try {
-    await models.Order.destroy({ where: { uuid } });
+    await orderServices.remove({ where: { uuid } });
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

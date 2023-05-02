@@ -1,10 +1,11 @@
-const models = require('../../models');
+const { cartServices, itemServices } = require('../../services');
 const { StatusCodes } = require('http-status-codes');
+const models = require('../../models');
 
 async function createCart(req, res) {
   const { id } = req.user;
   try {
-    await models.Cart.create({ userId: id });
+    await cartServices.create({ userId: id });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -31,12 +32,12 @@ async function addItemToCart(req, res) {
   const { cartUuid } = req.params;
   const { id: cartId } = req.cart;
   try {
-    await models.Cart.update({ status: 'INCOMPLETE' }, { where: { uuid: cartUuid } });
+    await cartServices.update({ status: 'INCOMPLETE' }, { where: { uuid: cartUuid } });
     const items = req.body.map(e => {
       e.cartId = cartId;
       return e;
     });
-    await models.Item.bulkCreate(items);
+    await itemServices.bulkCreate(items);
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -48,7 +49,7 @@ async function updateItem(req, res) {
   const { uuid } = req.params;
   const { quantity } = req.body;
   try {
-    await models.Item.update({ quantity }, { where: { uuid } });
+    await itemServices.update({ quantity }, { where: { uuid } });
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -59,7 +60,7 @@ async function updateItem(req, res) {
 async function RemoveItemFromCart(req, res) {
   const { uuid } = req.params;
   try {
-    await models.Item.destroy({ where: { uuid } });
+    await itemServices.remove({ where: { uuid } });
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

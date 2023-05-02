@@ -7,7 +7,7 @@ router.post('/', auth, checkAdmin, controller.createProducts);
 
 router.get('/', controller.listAllProducts);
 
-router.get('/:uuid', controller.findProduct);
+router.get('/:uuid', checkProduct, controller.findProduct);
 
 router.put('/:uuid', checkProduct, auth, checkAdmin, controller.updateProduct);
 
