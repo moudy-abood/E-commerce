@@ -4,12 +4,12 @@ async function bulkCreate(itemDetails) {
   return models.Item.bulkCreate(itemDetails);
 }
 
-async function update(data, itemDetails) {
-  return models.Item.update(data, itemDetails);
+async function update(quantity, uuid) {
+  return models.Item.update({ quantity }, { where: { uuid } });
 }
 
-async function remove(itemDetails) {
-  return models.Item.destroy(itemDetails);
+async function remove(uuid) {
+  return models.Item.destroy({ where: { uuid } });
 }
 
 const services = { bulkCreate, update, remove };

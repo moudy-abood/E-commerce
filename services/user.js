@@ -4,15 +4,18 @@ async function create(userDetails) {
   return models.User.create(userDetails);
 }
 
-async function findOne(userDetails) {
-  return models.User.findOne(userDetails);
+async function findOne(uuid) {
+  return models.User.findOne({
+    where: { uuid },
+    attributes: { exclude: ['id'] }
+  });
 }
-async function update(data, userDetails) {
-  return models.User.update(data, userDetails);
+async function update(data, uuid) {
+  return models.User.update(data, { where: { uuid } });
 }
 
-async function remove(userDetails) {
-  return models.User.destroy(userDetails);
+async function remove(uuid) {
+  return models.User.destroy({ where: { uuid } });
 }
 
 const services = { create, findOne, update, remove };

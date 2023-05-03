@@ -4,15 +4,24 @@ async function create(orderDetails) {
   return models.Order.create(orderDetails);
 }
 
-async function findOne(orderDetails) {
-  return models.Order.findOne(orderDetails);
+async function findOne(uuid) {
+  return models.Order.findOne({
+    where: { uuid },
+    include: {
+      model: models.Cart,
+      include: { model: models.Item, include: { model: models.Product } }
+    },
+    attributes: { exclude: ['id'] },
+    nest: true,
+    raw: true
+  });
 }
-async function update(data, orderDetails) {
-  return models.Order.update(data, orderDetails);
+async function update(status, uuid) {
+  return models.Order.update({ status }, { where: { uuid } });
 }
 
-async function remove(orderDetails) {
-  return models.Order.destroy(orderDetails);
+async function remove(uuid) {
+  return models.Order.destroy({ where: { uuid } });
 }
 
 const services = { create, findOne, update, remove };

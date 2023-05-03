@@ -4,19 +4,22 @@ async function bulkCreate(productDetails) {
   return models.Product.bulkCreate(productDetails);
 }
 
-async function findAll(productDetails) {
-  return models.Product.findAll(productDetails);
+async function findAll() {
+  return models.Product.findAll({ attributes: { exclude: ['id'] } });
 }
 
-async function findOne(productDetails) {
-  return models.Product.findOne(productDetails);
+async function findOne(uuid) {
+  return models.Product.findOne({
+    where: { uuid },
+    attributes: { exclude: ['id'] }
+  });
 }
-async function update(data, productDetails) {
-  return models.Product.update(data, productDetails);
+async function update(data, uuid) {
+  return models.Product.update(data, { where: { uuid } });
 }
 
-async function remove(productDetails) {
-  return models.Product.destroy(productDetails);
+async function remove(uuid) {
+  return models.Product.destroy({ where: { uuid } });
 }
 
 const services = { bulkCreate, findAll, findOne, update, remove };

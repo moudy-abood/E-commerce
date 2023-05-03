@@ -13,7 +13,7 @@ async function createProducts(req, res) {
 
 async function listAllProducts(req, res) {
   try {
-    const products = await productServices.findAll({ attributes: { exclude: ['id'] } });
+    const products = await productServices.findAll();
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -24,10 +24,7 @@ async function listAllProducts(req, res) {
 async function findProduct(req, res) {
   const { uuid } = req.params;
   try {
-    const product = await productServices.findOne({
-      where: { uuid },
-      attributes: { exclude: ['id'] }
-    });
+    const product = await productServices.findOne(uuid);
     return res.status(StatusCodes.OK).send(product);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -39,7 +36,7 @@ async function updateProduct(req, res) {
   const { uuid } = req.params;
   const data = req.body;
   try {
-    await productServices.update(data, { where: { uuid } });
+    await productServices.update(data, uuid);
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -50,7 +47,7 @@ async function updateProduct(req, res) {
 async function deleteProduct(req, res) {
   const { uuid } = req.params;
   try {
-    await productServices.remove({ where: { uuid } });
+    await productServices.remove(uuid);
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

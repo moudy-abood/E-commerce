@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { auth, checkOrder, checkCart, checkAdmin } = require('./middleware');
+const { checkOrder, checkCart, checkAdmin } = require('./middleware');
 const controller = require('./controller/order');
 
-router.post('/', auth, checkCart, controller.createOrder);
+router.post('/', checkCart, controller.createOrder);
 
-router.get('/:uuid', auth, checkOrder, controller.findOrder);
+router.get('/:uuid', checkOrder, controller.findOrder);
 
-router.put('/:uuid/:status', auth, checkAdmin, checkOrder, controller.updateOrder);
+router.put('/:uuid/:status', checkAdmin, checkOrder, controller.updateOrder);
 
-router.delete('/:uuid', auth, checkAdmin, checkOrder, controller.deleteOrder);
+router.delete('/:uuid', checkAdmin, checkOrder, controller.deleteOrder);
 
 module.exports = router;

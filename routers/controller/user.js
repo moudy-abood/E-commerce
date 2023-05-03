@@ -17,7 +17,7 @@ async function UpdateUser(req, res) {
   const data = req.body;
   const { uuid } = req.user;
   try {
-    await userServices.update(data, { where: { uuid } });
+    await userServices.update(data, uuid);
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -28,10 +28,7 @@ async function UpdateUser(req, res) {
 async function getUser(req, res) {
   const { uuid } = req.user;
   try {
-    const user = await userServices.findOne({
-      where: { uuid },
-      attributes: { exclude: ['id'] }
-    });
+    const user = await userServices.findOne(uuid);
     return res.status(StatusCodes.OK).send(user);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -42,7 +39,7 @@ async function getUser(req, res) {
 async function deleteUser(req, res) {
   const { uuid } = req.params;
   try {
-    await userServices.remove({ where: { uuid } });
+    await userServices.remove(uuid);
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
