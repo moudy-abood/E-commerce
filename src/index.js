@@ -1,12 +1,12 @@
 const express = require('express');
 const routes = express();
-const { auth } = require('../routers/middleware')
+const { auth } = require('./middleware');
 
-const userRouter = require('./user');
-const addressRouter = require('./address');
-const productRouter = require('./products');
-const cartRouter = require('./cart');
-const orderRouter = require('./order');
+const userRouter = require('./api/user');
+const addressRouter = require('./api/address');
+const productRouter = require('./api/products');
+const cartRouter = require('./api/cart');
+const orderRouter = require('./api/order');
 
 routes.use('/user', userRouter);
 routes.use('/address', auth, addressRouter);

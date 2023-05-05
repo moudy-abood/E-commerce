@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { checkAddress } = require('./middleware');
-const controller = require('./controller/address');
+const { checkAddress } = require('../../middleware');
+const controller = require('./controller');
 
 router.post('/', controller.createAddress);
 

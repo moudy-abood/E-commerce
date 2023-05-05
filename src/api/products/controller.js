@@ -3,8 +3,8 @@ const { productServices } = require('../../services');
 
 async function createProducts(req, res) {
   try {
-    const product = await productServices.bulkCreate([...req.body]);
-    return res.status(StatusCodes.CREATED).send(product);
+    await productServices.bulkCreate([...req.body]);
+    return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);

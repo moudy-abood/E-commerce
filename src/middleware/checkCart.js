@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
-const { Cart } = require('../../models');
+const { Cart } = require('../../src/models');
 
 async function checkCart(req, res, next) {
   const cartUuid = req.body.cartUuid || req.params.cartUuid;

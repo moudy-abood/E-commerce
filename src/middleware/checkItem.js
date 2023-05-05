@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
-const { Item } = require('../../models');
+const { Item } = require('../../src/models');
 
 async function checkItem(req, res, next) {
   const { uuid } = req.params;

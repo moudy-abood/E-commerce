@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { checkAvailableCart, checkItem, checkCart } = require('./middleware');
-const controller = require('./controller/cart');
+const { checkAvailableCart, checkItem, checkCart } = require('../../middleware');
+const controller = require('./controller');
 
 router.post('/', checkAvailableCart, controller.createCart);
 

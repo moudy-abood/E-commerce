@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
-const { Cart } = require('../../models');
+const { Cart } = require('../../src/models');
 const { Op } = require('sequelize');
 
 async function checkAvailableCart(req, res, next) {
