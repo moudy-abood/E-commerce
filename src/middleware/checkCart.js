@@ -1,10 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
-const { Cart } = require('../../src/models');
+const { cartServices } = require('../services');
 
 async function checkCart(req, res, next) {
-  const cartUuid = req.body.cartUuid || req.params.cartUuid;
+  const uuid = req.body.cartUuid || req.params.cartUuid;
   try {
-    const cart = await Cart.findOne({ where: { uuid: cartUuid } });
+    const cart = await cartServices.findOneMidWare(uuid);
     req.cart = cart;
     return cart ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {

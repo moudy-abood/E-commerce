@@ -3,7 +3,7 @@ const { productServices } = require('../../services');
 
 async function createProducts(req, res) {
   try {
-    await productServices.bulkCreate([...req.body]);
+    await productServices.createProducts([...req.body]);
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -13,7 +13,7 @@ async function createProducts(req, res) {
 
 async function listAllProducts(req, res) {
   try {
-    const products = await productServices.findAll();
+    const products = await productServices.getAll();
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -24,7 +24,7 @@ async function listAllProducts(req, res) {
 async function findProduct(req, res) {
   const { uuid } = req.params;
   try {
-    const product = await productServices.findOne(uuid);
+    const product = await productServices.getOne(uuid);
     return res.status(StatusCodes.OK).send(product);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -47,7 +47,7 @@ async function updateProduct(req, res) {
 async function deleteProduct(req, res) {
   const { uuid } = req.params;
   try {
-    await productServices.remove(uuid);
+    await productServices.removeProduct(uuid);
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

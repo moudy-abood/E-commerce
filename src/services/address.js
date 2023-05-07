@@ -4,27 +4,27 @@ async function create(addressDetails) {
   return models.Address.create(addressDetails);
 }
 
-async function findAll(id) {
+async function findAllUserAddresses(id) {
   return models.Address.findAll({
     where: { userId: id },
-    attributes: { exclude: ['id'] }
+    attributes: { exclude: ['id', 'userId'] }
   });
 }
 
-async function findOne(uuid) {
+async function getAddress(uuid) {
   return models.Address.findOne({
     where: { uuid },
-    attributes: { exclude: ['id'] }
+    attributes: { exclude: ['id', 'userId'] }
   });
 }
-async function update(data, uuid) {
+async function updateAddress(data, uuid) {
   return models.Address.update(data, { where: { uuid } });
 }
 
-async function remove(uuid) {
+async function removeAddress(uuid) {
   return models.Address.destroy({ where: { uuid } });
 }
 
-const services = { create, findAll, findOne, update, remove };
+const services = { create, findAllUserAddresses, getAddress, updateAddress, removeAddress };
 
 module.exports = services;

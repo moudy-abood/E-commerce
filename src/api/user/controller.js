@@ -13,7 +13,7 @@ async function createUser(req, res) {
   }
 }
 
-async function UpdateUser(req, res) {
+async function updateUser(req, res) {
   const data = req.body;
   const { uuid } = req.user;
   try {
@@ -28,7 +28,7 @@ async function UpdateUser(req, res) {
 async function getUser(req, res) {
   const { uuid } = req.user;
   try {
-    const user = await userServices.findOne(uuid);
+    const user = await userServices.getOne(uuid);
     return res.status(StatusCodes.OK).send(user);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -39,7 +39,7 @@ async function getUser(req, res) {
 async function deleteUser(req, res) {
   const { uuid } = req.params;
   try {
-    await userServices.remove(uuid);
+    await userServices.removeUser(uuid);
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -47,6 +47,6 @@ async function deleteUser(req, res) {
   }
 }
 
-const controller = { createUser, UpdateUser, getUser, deleteUser };
+const controller = { createUser, updateUser, getUser, deleteUser };
 
 module.exports = controller;

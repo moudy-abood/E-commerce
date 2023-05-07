@@ -5,7 +5,7 @@ const controller = require('./controller');
 
 router.post('/', checkCart, controller.createOrder);
 
-router.get('/:uuid', checkOrder, controller.findOrder);
+router.get('/:uuid', checkOrder, controller.getOrder);
 
 router.put('/:uuid/:status', checkAdmin, checkOrder, controller.updateOrder);
 

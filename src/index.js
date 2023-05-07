@@ -1,17 +1,12 @@
+require('dotenv').config();
 const express = require('express');
-const routes = express();
-const { auth } = require('./middleware');
+const app = express();
+const routes = require('./api');
+const port = process.env.PORT;
 
-const userRouter = require('./api/user');
-const addressRouter = require('./api/address');
-const productRouter = require('./api/products');
-const cartRouter = require('./api/cart');
-const orderRouter = require('./api/order');
+app.use(express.json());
+app.use(routes);
 
-routes.use('/user', userRouter);
-routes.use('/address', auth, addressRouter);
-routes.use('/product', productRouter);
-routes.use('/cart', auth, cartRouter);
-routes.use('/order', auth, orderRouter);
-
-module.exports = routes;
+app.listen(port, () => {
+  console.log('sever is up on port ' + port);
+});

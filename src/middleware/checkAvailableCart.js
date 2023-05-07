@@ -1,18 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
-const { Cart } = require('../../src/models');
-const { Op } = require('sequelize');
+const { cartServices } = require('../services');
 
 async function checkAvailableCart(req, res, next) {
   const { id: userId } = req.user;
   try {
-    const cart = await Cart.findOne({
-      where: {
-        userId,
-        status: {
-          [Op.in]: ['NEW', 'INCOMPLETE']
-        }
-      }
-    });
+    const cart = await cartServices.checkAvailableCartMidWare(userId);
     return !cart ? next() : res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;

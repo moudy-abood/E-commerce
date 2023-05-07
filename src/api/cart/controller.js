@@ -15,7 +15,7 @@ async function createCart(req, res) {
 async function getCart(req, res) {
   const { cartUuid } = req.params;
   try {
-    const cart = await cartServices.findOne(cartUuid);
+    const cart = await cartServices.getOne(cartUuid);
     return res.status(StatusCodes.OK).send(cart);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -24,15 +24,15 @@ async function getCart(req, res) {
 }
 
 async function addItemToCart(req, res) {
-  const { cartUuid } = req.params;
   const { id: cartId } = req.cart;
+  const { uuid } = req.cart;
   try {
-    await cartServices.update({ status: 'INCOMPLETE' }, cartUuid);
+    await cartServices.updateCartStatus({ status: 'INCOMPLETE' }, uuid);
     const items = req.body.map(e => {
       e.cartId = cartId;
       return e;
     });
-    await itemServices.bulkCreate(items);
+    await itemServices.addItemsToCart(items);
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -55,7 +55,7 @@ async function updateItem(req, res) {
 async function RemoveItemFromCart(req, res) {
   const { uuid } = req.params;
   try {
-    await itemServices.remove(uuid);
+    await itemServices.removeItem(uuid);
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

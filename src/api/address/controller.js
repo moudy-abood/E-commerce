@@ -15,7 +15,7 @@ async function createAddress(req, res) {
 async function listUserAddresses(req, res) {
   const { id } = req.user;
   try {
-    const addresses = await addressServices.findAll(id);
+    const addresses = await addressServices.findAllUserAddresses(id);
     return res.status(StatusCodes.OK).send(addresses);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -26,7 +26,7 @@ async function listUserAddresses(req, res) {
 async function getUserAddress(req, res) {
   const { uuid } = req.params;
   try {
-    const address = await addressServices.findOne(uuid);
+    const address = await addressServices.getAddress(uuid);
     return res.status(StatusCodes.OK).send(address);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -38,7 +38,7 @@ async function updateAddress(req, res) {
   const { uuid } = req.params;
   const data = req.body;
   try {
-    await addressServices.update(data, uuid);
+    await addressServices.updateAddress(data, uuid);
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -49,7 +49,7 @@ async function updateAddress(req, res) {
 async function deleteAddress(req, res) {
   const { uuid } = req.params;
   try {
-    await addressServices.remove(uuid);
+    await addressServices.removeAddress(uuid);
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;

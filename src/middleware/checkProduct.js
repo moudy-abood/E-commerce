@@ -1,10 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
-const { Product } = require('../../src/models');
+const { productServices } = require('../services');
 
 async function checkProduct(req, res, next) {
   const { uuid } = req.params;
   try {
-    const product = await Product.findOne({ where: { uuid } });
+    const product = await productServices.getOne(uuid);
     req.product = product;
     return product ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {

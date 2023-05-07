@@ -1,10 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
-const { Order } = require('../../src/models');
+const { orderServices } = require('../services');
 
 async function checkOrder(req, res, next) {
   const { uuid } = req.params;
   try {
-    const order = await Order.findOne({ where: { uuid } });
+    const order = await orderServices.findOneMidWare(uuid);
     return order ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {
     const errorMessage = e.message || e;

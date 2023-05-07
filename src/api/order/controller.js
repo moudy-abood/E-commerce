@@ -2,10 +2,9 @@ const { StatusCodes } = require('http-status-codes');
 const { orderServices, cartServices } = require('../../services');
 
 async function createOrder(req, res) {
-  const { cartUuid } = req.body;
-  const { id } = req.cart;
+  const { id, uuid } = req.cart;
   try {
-    await cartServices.update({ status: 'COMPLETED' }, cartUuid);
+    await cartServices.updateCartStatus({ status: 'COMPLETED' }, uuid);
     await orderServices.create({ ...req.body, cartId: id });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
@@ -14,13 +13,15 @@ async function createOrder(req, res) {
   }
 }
 
-async function findOrder(req, res) {
+async function getOrder(req, res) {
   const { uuid } = req.params;
   try {
     const order = await orderServices.findOne(uuid);
-    order.items = order.Cart.Items;
-    delete order.Cart;
-
+    order.dataValues.items = order.Cart.Items;
+    delete order.dataValues.Cart;
+    order.dataValues.Address = order.Address || order.temporaryAddress;
+    delete order.dataValues.temporaryAddress;
+    delete order.dataValues.addressId;
     return res.status(StatusCodes.OK).send(order);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -29,8 +30,7 @@ async function findOrder(req, res) {
 }
 
 async function updateOrder(req, res) {
-  const { uuid } = req.params;
-  const { status } = req.params;
+  const { status, uuid } = req.params;
   try {
     await orderServices.update(status, uuid);
     return res.status(StatusCodes.NO_CONTENT).send();
@@ -43,7 +43,7 @@ async function updateOrder(req, res) {
 async function deleteOrder(req, res) {
   const { uuid } = req.params;
   try {
-    await orderServices.remove(uuid);
+    await orderServices.removeOrder(uuid);
     return res.status(StatusCodes.OK).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -51,6 +51,6 @@ async function deleteOrder(req, res) {
   }
 }
 
-const controller = { createOrder, findOrder, updateOrder, deleteOrder };
+const controller = { createOrder, getOrder, updateOrder, deleteOrder };
 
 module.exports = controller;

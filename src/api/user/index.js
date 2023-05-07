@@ -5,7 +5,7 @@ const { auth, checkAdmin } = require('../../middleware');
 
 router.post('/', controller.createUser);
 
-router.put('/', auth, controller.UpdateUser);
+router.put('/', auth, controller.updateUser);
 
 router.get('/profile', auth, controller.getUser);
 
