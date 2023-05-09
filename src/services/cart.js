@@ -10,7 +10,7 @@ async function getOne(cartUuid) {
     where: { uuid: cartUuid },
     include: {
       model: models.Item,
-      attributes: { exclude: ['id', 'cartId', 'productId'] },
+      attributes: { exclude: ['id', 'cartId'] },
       include: { model: models.Product, attributes: { exclude: ['id'] } }
     },
     attributes: { exclude: ['id', 'userId'] }

@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { checkProduct, auth, checkAdmin } = require('../../middleware');
 const controller = require('./controller');
+const validator = require('./validator');
 
-router.post('/', auth, checkAdmin, controller.createProducts);
+router.post('/', auth, validator, checkAdmin, controller.createProducts);
 
 router.get('/', controller.listAllProducts);
 

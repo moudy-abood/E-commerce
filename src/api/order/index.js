@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { checkOrder, checkCart, checkAdmin } = require('../../middleware');
 const controller = require('./controller');
+const validator = require('./validator');
 
-router.post('/', checkCart, controller.createOrder);
+router.post('/', checkCart, validator, controller.createOrder);
 
 router.get('/:uuid', checkOrder, controller.getOrder);
 
