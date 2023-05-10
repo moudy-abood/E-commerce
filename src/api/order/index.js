@@ -4,12 +4,19 @@ const { checkOrder, checkCart, checkAdmin } = require('../../middleware');
 const controller = require('./controller');
 const validator = require('./validator');
 
-router.post('/', checkCart, validator, controller.createOrder);
+router.post('/', validator.create, checkCart, controller.createOrder);
 
-router.get('/:uuid', checkOrder, controller.getOrder);
+router.get('/:uuid', validator.uuid, checkOrder, controller.getOrder);
 
-router.put('/:uuid/:status', checkAdmin, checkOrder, controller.updateOrder);
+router.put(
+  '/:uuid/:status',
+  validator.uuid,
+  validator.update,
+  checkAdmin,
+  checkOrder,
+  controller.updateOrder
+);
 
-router.delete('/:uuid', checkAdmin, checkOrder, controller.deleteOrder);
+router.delete('/:uuid', validator.uuid, checkAdmin, checkOrder, controller.deleteOrder);
 
 module.exports = router;

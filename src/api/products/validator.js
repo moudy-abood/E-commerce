@@ -1,14 +1,29 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 
-const validate = celebrate({
+const create = celebrate({
   [Segments.BODY]: Joi.array().items(
     Joi.object().keys({
-      category: Joi.string().trim(),
-      title: Joi.string().trim(),
-      description: Joi.string().trim(),
-      price: Joi.number().positive()
+      category: Joi.string().trim().max(50).required(),
+      title: Joi.string().trim().max(50).required(),
+      description: Joi.string().trim().max(50).required(),
+      price: Joi.number().positive().required()
     })
   )
 });
 
-module.exports = validate;
+const update = celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    category: Joi.string().trim().max(50),
+    title: Joi.string().trim().max(50),
+    description: Joi.string().trim().max(50),
+    price: Joi.number().positive()
+  })
+});
+
+const uuid = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    uuid: Joi.string().uuid()
+  })
+});
+
+module.exports = { create, update, uuid };

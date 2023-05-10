@@ -2,16 +2,16 @@ const express = require('express');
 const router = express.Router();
 const controller = require('./controller');
 const { auth, checkAdmin } = require('../../middleware');
-const validate = require('./validator');
+const validator = require('./validator');
 const { errors } = require('celebrate');
 
-router.post('/', validate, controller.createUser);
+router.post('/', validator.create, controller.createUser);
 
-router.put('/', auth, validate, controller.updateUser);
+router.put('/', validator.update, auth, controller.updateUser);
 
 router.get('/profile', auth, controller.getUser);
 
-router.delete('/:uuid', auth, checkAdmin, controller.deleteUser);
+router.delete('/:uuid', auth, validator.uuid, checkAdmin, controller.deleteUser);
 
 router.use(errors());
 

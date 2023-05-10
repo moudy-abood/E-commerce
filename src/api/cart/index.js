@@ -6,12 +6,24 @@ const validator = require('./validator');
 
 router.post('/', checkAvailableCart, controller.createCart);
 
-router.get('/:cartUuid', checkCart, controller.getCart);
+router.get('/:cartUuid', validator.uuid, checkCart, controller.getCart);
 
-router.post('/:cartUuid/item', checkCart, validator, controller.addItemToCart);
+router.post(
+  '/:cartUuid/item',
+  validator.uuid,
+  validator.create,
+  checkCart,
+  controller.addItemToCart
+);
 
-router.put('/:cartUuid/item/:uuid', checkCart, checkItem, controller.updateItem);
+router.put('/:cartUuid/item/:uuid', validator.uuid, checkCart, checkItem, controller.updateItem);
 
-router.delete('/:cartUuid/item/:uuid', checkCart, checkItem, controller.RemoveItemFromCart);
+router.delete(
+  '/:cartUuid/item/:uuid',
+  validator.uuid,
+  checkCart,
+  checkItem,
+  controller.RemoveItemFromCart
+);
 
 module.exports = router;
