@@ -21,7 +21,7 @@ async function findOne(uuid) {
         attributes: { exclude: ['id', 'userId'] }
       }
     ],
-    attributes: { exclude: ['id', 'cartId'] }
+    attributes: { exclude: ['id', 'cartId', 'addressId'] }
   });
 }
 async function update(status, uuid) {

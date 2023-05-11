@@ -5,13 +5,12 @@ async function createProducts(productDetails) {
 }
 
 async function getAll() {
-  return models.Product.findAll({ attributes: { exclude: ['id'] } });
+  return models.Product.findAll();
 }
 
 async function getOne(uuid) {
   return models.Product.findOne({
-    where: { uuid },
-    attributes: { exclude: ['id'] }
+    where: { uuid }
   });
 }
 async function update(data, uuid) {

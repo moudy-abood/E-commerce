@@ -21,7 +21,6 @@ async function getOrder(req, res) {
     delete order.dataValues.Cart;
     order.dataValues.Address = order.Address || order.temporaryAddress;
     delete order.dataValues.temporaryAddress;
-    delete order.dataValues.addressId;
     return res.status(StatusCodes.OK).send(order);
   } catch (e) {
     const errorMessage = e.message || e;
