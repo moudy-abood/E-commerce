@@ -4,7 +4,7 @@ const { addressServices } = require('../services');
 async function checkAddress(req, res, next) {
   const { uuid } = req.params;
   try {
-    const address = await addressServices.getAddress(uuid);
+    const address = await addressServices.getAddressMidWare(uuid);
     req.address = address;
     return address ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {

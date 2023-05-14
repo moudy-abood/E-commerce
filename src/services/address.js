@@ -25,6 +25,19 @@ async function removeAddress(uuid) {
   return models.Address.destroy({ where: { uuid } });
 }
 
-const services = { create, findAllUserAddresses, getAddress, updateAddress, removeAddress };
+async function getAddressMidWare(uuid) {
+  return models.Address.findOne({
+    where: { uuid }
+  });
+}
+
+const services = {
+  create,
+  findAllUserAddresses,
+  getAddress,
+  updateAddress,
+  removeAddress,
+  getAddressMidWare
+};
 
 module.exports = services;
