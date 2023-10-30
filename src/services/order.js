@@ -24,6 +24,27 @@ async function findOne(uuid) {
     attributes: { exclude: ['id', 'cartId', 'addressId'] }
   });
 }
+
+async function findAll(id) {
+  return models.Order.findAll({
+    where: { userId: id },
+    include: [
+      {
+        model: models.Cart,
+        include: {
+          model: models.Item,
+          attributes: { exclude: ['id', 'cartId', 'productId'] },
+          include: { model: models.Product, attributes: { exclude: ['id'] } }
+        }
+      },
+      {
+        model: models.Address,
+        attributes: { exclude: ['id', 'userId'] }
+      }
+    ]
+  });
+}
+
 async function update(status, uuid) {
   return models.Order.update({ status }, { where: { uuid } });
 }
@@ -36,6 +57,20 @@ async function findOneMidWare(uuid) {
   return models.Order.findOne({ where: { uuid } });
 }
 
-const services = { create, findOne, update, removeOrder, findOneMidWare };
+async function findAddressMidWare(uuid) {
+  return models.Address.findOne({
+    where: { uuid }
+  });
+}
+
+const services = {
+  create,
+  findOne,
+  update,
+  removeOrder,
+  findOneMidWare,
+  findAddressMidWare,
+  findAll
+};
 
 module.exports = services;

@@ -19,6 +19,10 @@ const Order = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true
       },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
 
       status: {
         type: DataTypes.ENUM('PENDING', 'DISPATCHED', 'DELIVERED'),
@@ -42,6 +46,10 @@ const Order = (sequelize, DataTypes) => {
     });
     Order.belongsTo(model.Cart, {
       foreignKey: 'cartId',
+      targetKey: 'id'
+    });
+    Order.belongsTo(model.User, {
+      foreignKey: 'userId',
       targetKey: 'id'
     });
   };

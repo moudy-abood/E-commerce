@@ -7,7 +7,7 @@ async function create(userDetails) {
 async function getOne(uuid) {
   return models.User.findOne({
     where: { uuid },
-    attributes: { exclude: ['id', 'password', 'email'] }
+    attributes: { exclude: ['id', 'password'] }
   });
 }
 async function update(data, uuid) {

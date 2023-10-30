@@ -3,9 +3,11 @@ const { orderServices, cartServices } = require('../../services');
 
 async function createOrder(req, res) {
   const { id, uuid } = req.cart;
+  const address = req.addressId;
+  const userId = req.user.id;
   try {
     await cartServices.updateCartStatus({ status: 'COMPLETED' }, uuid);
-    await orderServices.create({ ...req.body, cartId: id });
+    await orderServices.create({ ...req.body, cartId: id, addressId: address, userId });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -21,6 +23,23 @@ async function getOrder(req, res) {
     delete order.dataValues.Cart;
     order.dataValues.Address = order.Address || order.temporaryAddress;
     delete order.dataValues.temporaryAddress;
+    return res.status(StatusCodes.OK).send(order);
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
+
+async function listOrders(req, res) {
+  const { id } = req.user;
+  try {
+    const order = await orderServices.findAll(id);
+    order.map(el => {
+      el.dataValues.items = el.Cart.Items;
+      delete el.dataValues.Cart;
+      el.dataValues.Address = el.Address || el.temporaryAddress;
+      delete el.dataValues.temporaryAddress;
+    });
     return res.status(StatusCodes.OK).send(order);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -50,6 +69,6 @@ async function deleteOrder(req, res) {
   }
 }
 
-const controller = { createOrder, getOrder, updateOrder, deleteOrder };
+const controller = { createOrder, getOrder, updateOrder, deleteOrder, listOrders };
 
 module.exports = controller;

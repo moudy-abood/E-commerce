@@ -1,5 +1,5 @@
 const { celebrate, Joi, Segments } = require('celebrate');
-
+// custom joy for sending an address  or a temp address
 const create = celebrate({
   [Segments.BODY]: Joi.object().keys({
     cartUuid: Joi.string().uuid().required(),
@@ -9,6 +9,7 @@ const create = celebrate({
       street: Joi.string().trim().max(50).required(),
       postalCode: Joi.number().positive().required()
     }),
+    addressUuid: Joi.string().uuid(),
     total: Joi.number().positive().required()
   })
 });

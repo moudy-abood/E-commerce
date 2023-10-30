@@ -8,6 +8,7 @@ const auth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET);
     const user = await userServices.findOneMidWare(decoded);
 
+    if (!user) throw new Error('Not authorized');
     req.token = decoded;
     req.user = user;
     return next();

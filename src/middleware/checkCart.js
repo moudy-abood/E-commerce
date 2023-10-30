@@ -2,9 +2,9 @@ const { StatusCodes } = require('http-status-codes');
 const { cartServices } = require('../services');
 
 async function checkCart(req, res, next) {
-  const uuid = req.body.cartUuid || req.params.cartUuid;
+  const { id } = req.user;
   try {
-    const cart = await cartServices.findOneMidWare(uuid);
+    const cart = await cartServices.findOneMidWare(id);
     req.cart = cart;
     return cart ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {

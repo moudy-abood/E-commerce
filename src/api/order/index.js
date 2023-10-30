@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { checkOrder, checkCart, checkAdmin, checkUser } = require('../../middleware');
+const { checkOrder, checkCart, checkAdmin } = require('../../middleware');
 const controller = require('./controller');
 const validator = require('./validator');
+const getAddressId = require('../../middleware/getAddressId');
 
-router.post('/', validator.create, checkCart, checkUser, controller.createOrder);
+router.post('/', validator.create, checkCart, getAddressId, controller.createOrder);
 
-router.get('/:uuid', validator.uuid, checkOrder, checkUser, controller.getOrder);
+router.get('/', controller.listOrders);
+
+router.get('/:uuid', validator.uuid, checkOrder, controller.getOrder);
 
 router.put(
   '/:uuid/:status',
@@ -14,7 +17,6 @@ router.put(
   validator.update,
   checkAdmin,
   checkOrder,
-  checkUser,
   controller.updateOrder
 );
 

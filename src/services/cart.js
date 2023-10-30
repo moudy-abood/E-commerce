@@ -5,9 +5,9 @@ async function create(cartDetails) {
   return models.Cart.create(cartDetails);
 }
 
-async function getOne(cartUuid) {
+async function getOne(id) {
   return models.Cart.findOne({
-    where: { uuid: cartUuid },
+    where: { userId: id },
     include: {
       model: models.Item,
       attributes: { exclude: ['id', 'cartId'] },
@@ -17,9 +17,9 @@ async function getOne(cartUuid) {
   });
 }
 
-async function findOneMidWare(uuid) {
+async function findOneMidWare(id) {
   return models.Cart.findOne({
-    where: { uuid }
+    where: { userId: id }
   });
 }
 
