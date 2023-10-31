@@ -10,6 +10,13 @@ const create = celebrate({
   })
 });
 
+const login = celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().email().max(50).required(),
+    password: Joi.string().min(8).max(50).required()
+  })
+});
+
 const update = celebrate({
   [Segments.BODY]: Joi.object().keys({
     email: Joi.string().email().max(50),
@@ -26,4 +33,4 @@ const uuid = celebrate({
   })
 });
 
-module.exports = { create, update, uuid };
+module.exports = { create, login, update, uuid };

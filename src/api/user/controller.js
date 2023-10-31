@@ -13,6 +13,21 @@ async function createUser(req, res) {
   }
 }
 
+async function loginUser(req, res) {
+  const { email, password } = req.body;
+  try {
+    const user = await userServices.login(email, password);
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).send();
+    }
+    const token = tokenGen({ userId: user.id });
+    return res.status(StatusCodes.OK).send({ token });
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
+
 async function updateUser(req, res) {
   const data = req.body;
   const { uuid } = req.user;
@@ -47,6 +62,6 @@ async function deleteUser(req, res) {
   }
 }
 
-const controller = { createUser, updateUser, getUser, deleteUser };
+const controller = { createUser, updateUser, getUser, deleteUser, loginUser };
 
 module.exports = controller;
