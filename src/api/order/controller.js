@@ -3,11 +3,11 @@ const { orderServices, cartServices } = require('../../services');
 
 async function createOrder(req, res) {
   const { id, uuid } = req.cart;
-  const address = req.addressId;
+  const { addressId } = req;
   const userId = req.user.id;
   try {
     await cartServices.updateCartStatus({ status: 'COMPLETED' }, uuid);
-    await orderServices.create({ ...req.body, cartId: id, addressId: address, userId });
+    await orderServices.create({ ...req.body, cartId: id, addressId, userId });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
@@ -33,14 +33,14 @@ async function getOrder(req, res) {
 async function listOrders(req, res) {
   const { id } = req.user;
   try {
-    const order = await orderServices.findAll(id);
-    order.map(el => {
-      el.dataValues.items = el.Cart.Items;
-      delete el.dataValues.Cart;
-      el.dataValues.Address = el.Address || el.temporaryAddress;
-      delete el.dataValues.temporaryAddress;
+    const orders = await orderServices.findAll(id);
+    orders.map(order => {
+      order.dataValues.items = order.Cart.Items;
+      delete order.dataValues.Cart;
+      order.dataValues.Address = order.Address || order.temporaryAddress;
+      delete order.dataValues.temporaryAddress;
     });
-    return res.status(StatusCodes.OK).send(order);
+    return res.status(StatusCodes.OK).send(orders);
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);

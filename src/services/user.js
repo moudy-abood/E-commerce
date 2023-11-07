@@ -1,18 +1,5 @@
 const models = require('../models');
 
-async function create(userDetails) {
-  return models.User.create(userDetails);
-}
-
-async function login(email, password) {
-  return models.User.findOne({
-    where: {
-      email,
-      password
-    }
-  });
-}
-
 async function getOne(uuid) {
   return models.User.findOne({
     where: { uuid },
@@ -31,6 +18,6 @@ async function findOneMidWare(decoded) {
   return models.User.findOne({ where: { id: decoded.userId } });
 }
 
-const services = { create, getOne, update, removeUser, findOneMidWare, login };
+const services = { getOne, update, removeUser, findOneMidWare };
 
 module.exports = services;

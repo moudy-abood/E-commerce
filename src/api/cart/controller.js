@@ -15,7 +15,7 @@ async function createCart(req, res) {
 async function getCart(req, res) {
   const { id } = req.user;
   try {
-    const cart = await cartServices.getOne(id);
+    const cart = await cartServices.getUserCart(id);
     return res.status(StatusCodes.OK).send(cart);
   } catch (e) {
     const errorMessage = e.message || e;

@@ -1,25 +1,8 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 
-const create = celebrate({
-  [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().email().max(50).required(),
-    password: Joi.string().min(8).max(50).required(),
-    name: Joi.string().alphanum().max(50).required(),
-    phoneNumber: Joi.number().integer().required(),
-    role: Joi.string().equal('ADMIN', 'USER').required()
-  })
-});
-
-const login = celebrate({
-  [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().email().max(50).required(),
-    password: Joi.string().min(8).max(50).required()
-  })
-});
-
 const update = celebrate({
   [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().email().max(50),
+    email: Joi.string().email(),
     password: Joi.string().min(8).max(50),
     name: Joi.string().alphanum().max(50),
     phoneNumber: Joi.number().integer(),
@@ -33,4 +16,4 @@ const uuid = celebrate({
   })
 });
 
-module.exports = { create, login, update, uuid };
+module.exports = { update, uuid };

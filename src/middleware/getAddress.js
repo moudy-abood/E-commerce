@@ -1,10 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
-const { orderServices } = require('../services');
+const { addressServices } = require('../services');
 
-async function getAddressId(req, res, next) {
+async function getAddress(req, res, next) {
   const { addressUuid } = req.body;
   try {
-    const address = await orderServices.findAddressMidWare(addressUuid);
+    const address = await addressServices.findAddress(addressUuid);
     req.addressId = address.id;
     return req.addressId ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {
@@ -13,4 +13,4 @@ async function getAddressId(req, res, next) {
   }
 }
 
-module.exports = getAddressId;
+module.exports = getAddress;

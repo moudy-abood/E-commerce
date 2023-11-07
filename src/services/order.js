@@ -57,19 +57,12 @@ async function findOneMidWare(uuid) {
   return models.Order.findOne({ where: { uuid } });
 }
 
-async function findAddressMidWare(uuid) {
-  return models.Address.findOne({
-    where: { uuid }
-  });
-}
-
 const services = {
   create,
   findOne,
   update,
   removeOrder,
   findOneMidWare,
-  findAddressMidWare,
   findAll
 };
 

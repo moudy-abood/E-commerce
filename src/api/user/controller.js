@@ -1,32 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 const { userServices } = require('../../services');
-const tokenGen = require('../../utils/token');
-
-async function createUser(req, res) {
-  try {
-    const user = await userServices.create({ ...req.body });
-    const token = tokenGen({ userId: user.id });
-    return res.status(StatusCodes.CREATED).send({ token });
-  } catch (e) {
-    const errorMessage = e.message || e;
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
-  }
-}
-
-async function loginUser(req, res) {
-  const { email, password } = req.body;
-  try {
-    const user = await userServices.login(email, password);
-    if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).send();
-    }
-    const token = tokenGen({ userId: user.id });
-    return res.status(StatusCodes.OK).send({ token });
-  } catch (e) {
-    const errorMessage = e.message || e;
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
-  }
-}
 
 async function updateUser(req, res) {
   const data = req.body;
@@ -62,6 +35,6 @@ async function deleteUser(req, res) {
   }
 }
 
-const controller = { createUser, updateUser, getUser, deleteUser, loginUser };
+const controller = { updateUser, getUser, deleteUser };
 
 module.exports = controller;

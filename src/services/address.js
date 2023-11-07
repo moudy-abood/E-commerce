@@ -25,10 +25,17 @@ async function removeAddress(uuid) {
   return models.Address.destroy({ where: { uuid } });
 }
 
-async function getAddressMidWare(uuid) {
+async function getAddressMidWare(uuid, userId) {
   return models.Address.findOne({
-    where: { uuid }
+    where: {
+      uuid,
+      userId
+    }
   });
+}
+
+async function findAddress(uuid) {
+  return models.Address.findOne({ where: { uuid } });
 }
 
 const services = {
@@ -37,7 +44,8 @@ const services = {
   getAddress,
   updateAddress,
   removeAddress,
-  getAddressMidWare
+  getAddressMidWare,
+  findAddress
 };
 
 module.exports = services;

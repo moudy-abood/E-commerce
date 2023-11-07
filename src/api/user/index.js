@@ -5,13 +5,9 @@ const { auth, checkAdmin } = require('../../middleware');
 const validator = require('./validator');
 const { errors } = require('celebrate');
 
-router.post('/', validator.create, controller.createUser);
-
-router.post('/login', validator.login, controller.loginUser);
-
 router.put('/', validator.update, auth, controller.updateUser);
 
-router.get('/profile', auth, controller.getUser);
+router.get('/', auth, controller.getUser);
 
 router.delete('/:uuid', auth, validator.uuid, checkAdmin, controller.deleteUser);
 
