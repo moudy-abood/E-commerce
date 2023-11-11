@@ -26,7 +26,7 @@ async function listUserAddresses(req, res) {
 async function getUserAddress(req, res) {
   const { uuid } = req.params;
   try {
-    const address = await addressServices.getAddress(uuid);
+    const address = await addressServices.getExposedAddress(uuid);
     return res.status(StatusCodes.OK).send(address);
   } catch (e) {
     const errorMessage = e.message || e;

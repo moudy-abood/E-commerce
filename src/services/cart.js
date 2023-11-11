@@ -5,7 +5,7 @@ async function create(cartDetails) {
   return models.Cart.create(cartDetails);
 }
 
-async function getUserCart(userId) {
+async function getUserExposedCart(userId) {
   return models.Cart.findOne({
     where: { userId },
     include: {
@@ -17,7 +17,7 @@ async function getUserCart(userId) {
   });
 }
 
-async function getExposedCart(id) {
+async function getCart(id) {
   return models.Cart.findOne({
     where: { userId: id }
   });
@@ -40,9 +40,9 @@ async function updateCartStatus(data, uuid) {
 
 const services = {
   create,
-  getUserCart,
+  getUserExposedCart,
   updateCartStatus,
-  getExposedCart,
+  getCart,
   checkAvailableCartMidWare
 };
 

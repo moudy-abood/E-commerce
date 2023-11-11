@@ -1,5 +1,24 @@
 const { StatusCodes } = require('http-status-codes');
+const bcrypt = require('bcrypt');
+
 const { userServices } = require('../../services');
+const tokenGen = require('../../utils/token');
+
+const saltRounds = Number(process.env.SALT_ROUNDS);
+
+async function createUser(req, res) {
+  try {
+    const { password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    req.body.password = hashedPassword;
+    const user = await userServices.create({ ...req.body });
+    const token = tokenGen({ userId: user.id });
+    return res.status(StatusCodes.CREATED).send({ token });
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
 
 async function updateUser(req, res) {
   const data = req.body;
@@ -16,7 +35,7 @@ async function updateUser(req, res) {
 async function getUser(req, res) {
   const { uuid } = req.user;
   try {
-    const user = await userServices.getOne(uuid);
+    const user = await userServices.findExposedUser(uuid);
     return res.status(StatusCodes.OK).send(user);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -35,6 +54,6 @@ async function deleteUser(req, res) {
   }
 }
 
-const controller = { updateUser, getUser, deleteUser };
+const controller = { createUser, updateUser, getUser, deleteUser };
 
 module.exports = controller;

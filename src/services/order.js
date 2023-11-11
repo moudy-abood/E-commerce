@@ -4,7 +4,7 @@ async function create(orderDetails) {
   return models.Order.create(orderDetails);
 }
 
-async function findOne(uuid) {
+async function findExposedOrder(uuid) {
   return models.Order.findOne({
     where: { uuid },
     include: [
@@ -25,7 +25,7 @@ async function findOne(uuid) {
   });
 }
 
-async function findAll(id) {
+async function findUserExposedOrders(id) {
   return models.Order.findAll({
     where: { userId: id },
     include: [
@@ -41,7 +41,29 @@ async function findAll(id) {
         model: models.Address,
         attributes: { exclude: ['id', 'userId'] }
       }
-    ]
+    ],
+    attributes: { exclude: ['id', 'userId', 'cartId', 'addressId'] }
+  });
+}
+
+async function findUsersExposedOrders() {
+  return models.Order.findAll({
+    include: [
+      {
+        model: models.Cart,
+        attributes: { exclude: ['userId'] },
+        include: {
+          model: models.Item,
+          attributes: { exclude: ['id', 'cartId', 'productId'] },
+          include: { model: models.Product, attributes: { exclude: ['id'] } }
+        }
+      },
+      {
+        model: models.Address,
+        attributes: { exclude: ['id', 'userId'] }
+      }
+    ],
+    attributes: { exclude: ['id', 'userId', 'cartId', 'addressId'] }
   });
 }
 
@@ -53,17 +75,18 @@ async function removeOrder(uuid) {
   return models.Order.destroy({ where: { uuid } });
 }
 
-async function findOneMidWare(uuid) {
+async function findOrder(uuid) {
   return models.Order.findOne({ where: { uuid } });
 }
 
 const services = {
   create,
-  findOne,
+  findExposedOrder,
   update,
   removeOrder,
-  findOneMidWare,
-  findAll
+  findOrder,
+  findUserExposedOrders,
+  findUsersExposedOrders
 };
 
 module.exports = services;

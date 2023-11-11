@@ -5,6 +5,8 @@ const { auth, checkAdmin } = require('../../middleware');
 const validator = require('./validator');
 const { errors } = require('celebrate');
 
+router.post('/', validator.create, controller.createUser);
+
 router.put('/', validator.update, auth, controller.updateUser);
 
 router.get('/', auth, controller.getUser);

@@ -3,11 +3,13 @@ const router = express.Router();
 const { checkOrder, checkCart, checkAdmin } = require('../../middleware');
 const controller = require('./controller');
 const validator = require('./validator');
-const getAddress = require('../../middleware/getAddress');
+const { checkOrderAddress } = require('../../middleware');
 
-router.post('/', validator.create, checkCart, getAddress, controller.createOrder);
+router.post('/', validator.create, checkCart, checkOrderAddress, controller.createOrder);
 
-router.get('/', controller.listOrders);
+router.get('/admin', checkAdmin, controller.getAllOrders);
+
+router.get('/', controller.getUserOrders);
 
 router.get('/:uuid', validator.uuid, checkOrder, controller.getOrder);
 

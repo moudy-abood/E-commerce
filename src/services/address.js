@@ -11,7 +11,7 @@ async function findAllUserAddresses(id) {
   });
 }
 
-async function getAddress(uuid) {
+async function getExposedAddress(uuid) {
   return models.Address.findOne({
     where: { uuid },
     attributes: { exclude: ['id', 'userId'] }
@@ -25,7 +25,7 @@ async function removeAddress(uuid) {
   return models.Address.destroy({ where: { uuid } });
 }
 
-async function getAddressMidWare(uuid, userId) {
+async function getAddress(uuid, userId) {
   return models.Address.findOne({
     where: {
       uuid,
@@ -44,7 +44,7 @@ const services = {
   getAddress,
   updateAddress,
   removeAddress,
-  getAddressMidWare,
+  getExposedAddress,
   findAddress
 };
 

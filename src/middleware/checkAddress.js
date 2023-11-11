@@ -5,7 +5,7 @@ async function checkAddress(req, res, next) {
   const { uuid } = req.params;
   const { id } = req.user;
   try {
-    const address = await addressServices.getAddressMidWare(uuid, id);
+    const address = await addressServices.getAddress(uuid, id);
     req.address = address;
     return address ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {

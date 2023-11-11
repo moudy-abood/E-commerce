@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 const controller = require('./controller');
 const validator = require('./validator');
-const { hashedPassword } = require('../../middleware');
+const { checkUser } = require('../../middleware');
 const { errors } = require('celebrate');
 
-router.post('/register', validator.create, hashedPassword, controller.createUser);
-
-router.post('/login', validator.login, controller.login);
+router.post('/login', validator.login, checkUser, controller.login);
 
 router.use(errors());
 
