@@ -6,7 +6,7 @@ const validator = require('./validator');
 
 router.post('/', checkAvailableCart, controller.createCart);
 
-router.get('/:cartUuid', validator.uuid, checkCart, controller.getCart);
+router.get('/', checkCart, controller.getCart);
 
 router.post(
   '/:cartUuid/item',

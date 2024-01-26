@@ -12,10 +12,10 @@ async function removeItem(uuid) {
   return models.Item.destroy({ where: { uuid } });
 }
 
-async function findOneMidWare(uuid) {
+async function findItem(uuid) {
   return models.Item.findOne({ where: { uuid } });
 }
 
-const services = { addItemsToCart, update, removeItem, findOneMidWare };
+const services = { addItemsToCart, update, removeItem, findItem };
 
 module.exports = services;

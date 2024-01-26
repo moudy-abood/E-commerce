@@ -4,7 +4,7 @@ async function create(orderDetails) {
   return models.Order.create(orderDetails);
 }
 
-async function findOne(uuid) {
+async function findExposedOrder(uuid) {
   return models.Order.findOne({
     where: { uuid },
     include: [
@@ -24,6 +24,49 @@ async function findOne(uuid) {
     attributes: { exclude: ['id', 'cartId', 'addressId'] }
   });
 }
+
+async function findUserExposedOrders(id) {
+  return models.Order.findAll({
+    where: { userId: id },
+    include: [
+      {
+        model: models.Cart,
+        include: {
+          model: models.Item,
+          attributes: { exclude: ['id', 'cartId', 'productId'] },
+          include: { model: models.Product, attributes: { exclude: ['id'] } }
+        }
+      },
+      {
+        model: models.Address,
+        attributes: { exclude: ['id', 'userId'] }
+      }
+    ],
+    attributes: { exclude: ['id', 'userId', 'cartId', 'addressId'] }
+  });
+}
+
+async function findUsersExposedOrders() {
+  return models.Order.findAll({
+    include: [
+      {
+        model: models.Cart,
+        attributes: { exclude: ['userId'] },
+        include: {
+          model: models.Item,
+          attributes: { exclude: ['id', 'cartId', 'productId'] },
+          include: { model: models.Product, attributes: { exclude: ['id'] } }
+        }
+      },
+      {
+        model: models.Address,
+        attributes: { exclude: ['id', 'userId'] }
+      }
+    ],
+    attributes: { exclude: ['id', 'userId', 'cartId', 'addressId'] }
+  });
+}
+
 async function update(status, uuid) {
   return models.Order.update({ status }, { where: { uuid } });
 }
@@ -32,10 +75,18 @@ async function removeOrder(uuid) {
   return models.Order.destroy({ where: { uuid } });
 }
 
-async function findOneMidWare(uuid) {
+async function findOrder(uuid) {
   return models.Order.findOne({ where: { uuid } });
 }
 
-const services = { create, findOne, update, removeOrder, findOneMidWare };
+const services = {
+  create,
+  findExposedOrder,
+  update,
+  removeOrder,
+  findOrder,
+  findUserExposedOrders,
+  findUsersExposedOrders
+};
 
 module.exports = services;

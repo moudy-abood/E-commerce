@@ -11,7 +11,7 @@ async function findAllUserAddresses(id) {
   });
 }
 
-async function getAddress(uuid) {
+async function getExposedAddress(uuid) {
   return models.Address.findOne({
     where: { uuid },
     attributes: { exclude: ['id', 'userId'] }
@@ -25,6 +25,27 @@ async function removeAddress(uuid) {
   return models.Address.destroy({ where: { uuid } });
 }
 
-const services = { create, findAllUserAddresses, getAddress, updateAddress, removeAddress };
+async function getAddress(uuid, userId) {
+  return models.Address.findOne({
+    where: {
+      uuid,
+      userId
+    }
+  });
+}
+
+async function findAddress(uuid) {
+  return models.Address.findOne({ where: { uuid } });
+}
+
+const services = {
+  create,
+  findAllUserAddresses,
+  getAddress,
+  updateAddress,
+  removeAddress,
+  getExposedAddress,
+  findAddress
+};
 
 module.exports = services;

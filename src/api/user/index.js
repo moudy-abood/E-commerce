@@ -9,7 +9,7 @@ router.post('/', validator.create, controller.createUser);
 
 router.put('/', validator.update, auth, controller.updateUser);
 
-router.get('/profile', auth, controller.getUser);
+router.get('/', auth, controller.getUser);
 
 router.delete('/:uuid', auth, validator.uuid, checkAdmin, controller.deleteUser);
 

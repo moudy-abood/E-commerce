@@ -4,10 +4,10 @@ async function create(userDetails) {
   return models.User.create(userDetails);
 }
 
-async function getOne(uuid) {
+async function findExposedUser(uuid) {
   return models.User.findOne({
     where: { uuid },
-    attributes: { exclude: ['id', 'password', 'email'] }
+    attributes: { exclude: ['id', 'password'] }
   });
 }
 async function update(data, uuid) {
@@ -18,10 +18,10 @@ async function removeUser(uuid) {
   return models.User.destroy({ where: { uuid } });
 }
 
-async function findOneMidWare(decoded) {
+async function findUser(decoded) {
   return models.User.findOne({ where: { id: decoded.userId } });
 }
 
-const services = { create, getOne, update, removeUser, findOneMidWare };
+const services = { create, findExposedUser, update, removeUser, findUser };
 
 module.exports = services;

@@ -1,11 +1,18 @@
 const models = require('../models');
+const { productDataMapper } = require('../utils/helpers');
 
 async function createProducts(productDetails) {
   return models.Product.bulkCreate(productDetails);
 }
 
-async function getAll() {
-  return models.Product.findAll();
+async function getAll(page, pageSize) {
+  const offset = (page - 1) * pageSize;
+
+  const result = await models.Product.findAndCountAll({
+    limit: pageSize,
+    offset
+  });
+  return productDataMapper(result, page, pageSize);
 }
 
 async function getOne(uuid) {

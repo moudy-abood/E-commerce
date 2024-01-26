@@ -4,7 +4,8 @@ const { orderServices } = require('../services');
 async function checkOrder(req, res, next) {
   const { uuid } = req.params;
   try {
-    const order = await orderServices.findOneMidWare(uuid);
+    const order = await orderServices.findOrder(uuid);
+    req.order = order;
     return order ? next() : res.status(StatusCodes.NOT_FOUND).send();
   } catch (e) {
     const errorMessage = e.message || e;
