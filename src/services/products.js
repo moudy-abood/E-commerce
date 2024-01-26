@@ -1,4 +1,5 @@
 const models = require('../models');
+const { productDataMapper } = require('../utils/helpers');
 
 async function createProducts(productDetails) {
   return models.Product.bulkCreate(productDetails);
@@ -11,12 +12,7 @@ async function getAll(page, pageSize) {
     limit: pageSize,
     offset
   });
-  return {
-    products: result.rows,
-    totalCount: result.count,
-    totalPages: Math.ceil(result.count / pageSize),
-    currentPage: page
-  };
+  return productDataMapper(result, page, pageSize);
 }
 
 async function getOne(uuid) {
@@ -32,13 +28,6 @@ async function removeProduct(uuid) {
   return models.Product.destroy({ where: { uuid } });
 }
 
-async function pagination() {
-  return models.Product.findAndCountAll({
-    offset: 10,
-    limit: 2
-  });
-}
-
-const services = { createProducts, getAll, getOne, update, removeProduct, pagination };
+const services = { createProducts, getAll, getOne, update, removeProduct };
 
 module.exports = services;

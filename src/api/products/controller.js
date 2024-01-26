@@ -1,5 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const { productServices } = require('../../services');
+const { queryMapper } = require('../../utils/helpers');
 
 async function createProducts(req, res) {
   try {
@@ -13,8 +14,7 @@ async function createProducts(req, res) {
 
 async function listAllProducts(req, res) {
   try {
-    const page = req.query.page || 1;
-    const pageSize = req.query.pageSize || 10;
+    const { page, pageSize } = await queryMapper(req.query);
     const products = await productServices.getAll(page, pageSize);
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
