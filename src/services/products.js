@@ -4,8 +4,19 @@ async function createProducts(productDetails) {
   return models.Product.bulkCreate(productDetails);
 }
 
-async function getAll() {
-  return models.Product.findAll();
+async function getAll(page, pageSize) {
+  const offset = (page - 1) * pageSize;
+
+  const result = await models.Product.findAndCountAll({
+    limit: pageSize,
+    offset
+  });
+  return {
+    products: result.rows,
+    totalCount: result.count,
+    totalPages: Math.ceil(result.count / pageSize),
+    currentPage: page
+  };
 }
 
 async function getOne(uuid) {
@@ -21,6 +32,13 @@ async function removeProduct(uuid) {
   return models.Product.destroy({ where: { uuid } });
 }
 
-const services = { createProducts, getAll, getOne, update, removeProduct };
+async function pagination() {
+  return models.Product.findAndCountAll({
+    offset: 10,
+    limit: 2
+  });
+}
+
+const services = { createProducts, getAll, getOne, update, removeProduct, pagination };
 
 module.exports = services;

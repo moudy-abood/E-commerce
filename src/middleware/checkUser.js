@@ -4,7 +4,7 @@ const { authenticationServices } = require('../services');
 async function checkUser(req, res, next) {
   const { email } = req.body;
   try {
-    const user = await authenticationServices.getEmail(email);
+    const user = await authenticationServices.getUserByEmail(email);
     req.user = user;
     return user
       ? next()

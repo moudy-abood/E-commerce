@@ -1,11 +1,11 @@
 const models = require('../models');
 
-async function getEmail(email) {
+async function getUserByEmail(email) {
   return models.User.findOne({
     where: { email }
   });
 }
 
-const services = { getEmail };
+const services = { getUserByEmail };
 
 module.exports = services;

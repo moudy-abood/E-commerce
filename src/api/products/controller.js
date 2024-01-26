@@ -13,7 +13,9 @@ async function createProducts(req, res) {
 
 async function listAllProducts(req, res) {
   try {
-    const products = await productServices.getAll();
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const products = await productServices.getAll(page, pageSize);
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -55,6 +57,12 @@ async function deleteProduct(req, res) {
   }
 }
 
-const controller = { createProducts, listAllProducts, findProduct, updateProduct, deleteProduct };
+const controller = {
+  createProducts,
+  listAllProducts,
+  findProduct,
+  updateProduct,
+  deleteProduct
+};
 
 module.exports = controller;
