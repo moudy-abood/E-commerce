@@ -32,13 +32,15 @@ async function getOrder(req, res) {
 
 async function getUserOrders(req, res) {
   const { id } = req.user;
+  const options = req.query;
   try {
-    const orders = await orderServices.findUserExposedOrders(id);
+    const orders = await orderServices.findUserExposedOrders(id, options);
     orders.map(order => {
-      order.dataValues.items = order.Cart.Items;
-      delete order.dataValues.Cart;
-      order.dataValues.Address = order.Address || order.temporaryAddress;
-      delete order.dataValues.temporaryAddress;
+      order.toJSON();
+      order.items = order.Cart.Items;
+      delete order.Cart;
+      order.Address = order.Address || order.temporaryAddress;
+      delete order.temporaryAddress;
     });
     return res.status(StatusCodes.OK).send(orders);
   } catch (e) {
@@ -79,6 +81,13 @@ async function deleteOrder(req, res) {
   }
 }
 
-const controller = { createOrder, getOrder, updateOrder, deleteOrder, getUserOrders, getAllOrders };
+const controller = {
+  createOrder,
+  getOrder,
+  updateOrder,
+  deleteOrder,
+  getUserOrders,
+  getAllOrders
+};
 
 module.exports = controller;

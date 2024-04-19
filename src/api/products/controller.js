@@ -14,8 +14,20 @@ async function createProducts(req, res) {
 
 async function listAllProducts(req, res) {
   try {
+    const { page, pageSize, offset } = await queryMapper(req.query);
+    const products = await productServices.getAll(page, pageSize, offset);
+    return res.status(StatusCodes.OK).send(products);
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
+
+async function allProducts(req, res) {
+  try {
+    const option = req.queryOptions;
     const { page, pageSize } = await queryMapper(req.query);
-    const products = await productServices.getAll(page, pageSize);
+    const products = await productServices.listProducts(option, page, pageSize);
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -62,7 +74,8 @@ const controller = {
   listAllProducts,
   findProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  allProducts
 };
 
 module.exports = controller;

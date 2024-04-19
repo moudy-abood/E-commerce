@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { checkProduct, auth, checkAdmin } = require('../../middleware');
+const { checkProduct, auth, checkAdmin, queryFilters } = require('../../middleware');
 const controller = require('./controller');
 const validator = require('./validator');
 
 router.post('/', validator.create, auth, checkAdmin, controller.createProducts);
 
 router.get('/', controller.listAllProducts);
+
+router.get('/list', queryFilters, controller.allProducts);
 
 router.get('/:uuid', validator.uuid, checkProduct, controller.findProduct);
 

@@ -10,9 +10,11 @@ async function productDataMapper(result, page, pageSize) {
 async function queryMapper(query) {
   const page = query.page || 1;
   const pageSize = query.pageSize || 10;
+  const offset = (page - 1) * pageSize;
   return {
     page,
-    pageSize
+    pageSize,
+    offset
   };
 }
 
