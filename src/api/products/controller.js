@@ -12,6 +12,16 @@ async function createProducts(req, res) {
   }
 }
 
+async function listAll(req, res) {
+  try {
+    const allProducts = await productServices.findAllProducts();
+    return res.status(StatusCodes.OK).send(allProducts);
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
+
 async function listAllProducts(req, res) {
   try {
     const { page, pageSize, offset } = await queryMapper(req.query);
@@ -29,6 +39,18 @@ async function allProducts(req, res) {
     const { page, pageSize } = await queryMapper(req.query);
     const products = await productServices.listProducts(option, page, pageSize);
     return res.status(StatusCodes.OK).send(products);
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
+
+async function allByCategory(req, res) {
+  try {
+    const { category } = req.query;
+    const { page, pageSize, offset } = await queryMapper(req.query);
+    const result = await productServices.getAllByCategory(category, page, pageSize, offset);
+    return res.status(StatusCodes.OK).send(result);
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
@@ -75,7 +97,9 @@ const controller = {
   findProduct,
   updateProduct,
   deleteProduct,
-  allProducts
+  allProducts,
+  listAll,
+  allByCategory
 };
 
 module.exports = controller;

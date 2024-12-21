@@ -1,3 +1,5 @@
+const { literal } = require('sequelize');
+
 const models = require('../models');
 const { productDataMapper } = require('../utils/helpers');
 
@@ -11,6 +13,21 @@ async function getAll(page, pageSize, offset) {
     offset
   });
   return productDataMapper(result, page, pageSize);
+}
+
+async function getAllByCategory(category, page, pageSize, offset) {
+  const result = await models.Product.findAndCountAll({
+    where: { category },
+    limit: pageSize,
+    offset
+  });
+  return productDataMapper(result, page, pageSize);
+}
+async function findAllProducts() {
+  return models.Product.findAll({
+    attributes: [[literal('DISTINCT ON (category) category '), 'category'], 'uuid'],
+    raw: true
+  });
 }
 
 async function listProducts(options, page, pageSize, offset) {
@@ -36,6 +53,15 @@ async function removeProduct(uuid) {
   return models.Product.destroy({ where: { uuid } });
 }
 
-const services = { createProducts, getAll, getOne, update, removeProduct, listProducts };
+const services = {
+  createProducts,
+  getAll,
+  getOne,
+  update,
+  removeProduct,
+  listProducts,
+  findAllProducts,
+  getAllByCategory
+};
 
 module.exports = services;
