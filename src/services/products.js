@@ -7,37 +7,19 @@ async function createProducts(productDetails) {
   return models.Product.bulkCreate(productDetails);
 }
 
-async function getAll(page, pageSize, offset) {
-  const result = await models.Product.findAndCountAll({
-    limit: pageSize,
-    offset
-  });
-  return productDataMapper(result, page, pageSize);
-}
-
-async function getAllByCategory(category, page, pageSize, offset) {
-  const result = await models.Product.findAndCountAll({
-    where: { category },
-    limit: pageSize,
-    offset
-  });
-  return productDataMapper(result, page, pageSize);
-}
-async function findAllProducts() {
+async function listAllCategories() {
   return models.Product.findAll({
-    attributes: [[literal('DISTINCT ON (category) category '), 'category'], 'uuid'],
-    raw: true
+    attributes: [[literal('DISTINCT category '), 'category']]
   });
 }
 
-async function listProducts(options, page, pageSize, offset) {
+async function listProducts(options) {
+  const { page } = options;
   const result = await models.Product.findAndCountAll({
-    where: options,
-    attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
-    limit: pageSize,
-    offset
+    ...options,
+    attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
   });
-  return productDataMapper(result, page, pageSize);
+  return productDataMapper(result, page);
 }
 
 async function getOne(uuid) {
@@ -55,13 +37,11 @@ async function removeProduct(uuid) {
 
 const services = {
   createProducts,
-  getAll,
   getOne,
   update,
   removeProduct,
   listProducts,
-  findAllProducts,
-  getAllByCategory
+  listAllCategories
 };
 
 module.exports = services;

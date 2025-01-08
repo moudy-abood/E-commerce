@@ -1,6 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 const { productServices } = require('../../services');
-const { queryMapper } = require('../../utils/helpers');
 
 async function createProducts(req, res) {
   try {
@@ -12,32 +11,10 @@ async function createProducts(req, res) {
   }
 }
 
-async function listAll(req, res) {
-  try {
-    const allProducts = await productServices.findAllProducts();
-    return res.status(StatusCodes.OK).send(allProducts);
-  } catch (e) {
-    const errorMessage = e.message || e;
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
-  }
-}
-
-async function listAllProducts(req, res) {
-  try {
-    const { page, pageSize, offset } = await queryMapper(req.query);
-    const products = await productServices.getAll(page, pageSize, offset);
-    return res.status(StatusCodes.OK).send(products);
-  } catch (e) {
-    const errorMessage = e.message || e;
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
-  }
-}
-
 async function allProducts(req, res) {
   try {
     const option = req.queryOptions;
-    const { page, pageSize } = await queryMapper(req.query);
-    const products = await productServices.listProducts(option, page, pageSize);
+    const products = await productServices.listProducts(option);
     return res.status(StatusCodes.OK).send(products);
   } catch (e) {
     const errorMessage = e.message || e;
@@ -45,12 +22,10 @@ async function allProducts(req, res) {
   }
 }
 
-async function allByCategory(req, res) {
+async function allCategories(req, res) {
   try {
-    const { category } = req.query;
-    const { page, pageSize, offset } = await queryMapper(req.query);
-    const result = await productServices.getAllByCategory(category, page, pageSize, offset);
-    return res.status(StatusCodes.OK).send(result);
+    const categories = await productServices.listAllCategories();
+    return res.status(StatusCodes.OK).send(categories);
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
@@ -93,13 +68,11 @@ async function deleteProduct(req, res) {
 
 const controller = {
   createProducts,
-  listAllProducts,
   findProduct,
   updateProduct,
   deleteProduct,
   allProducts,
-  listAll,
-  allByCategory
+  allCategories
 };
 
 module.exports = controller;

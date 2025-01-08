@@ -11,13 +11,18 @@ const definedOperations = {
 };
 async function queryFilters(req, res, next) {
   try {
-    const queryFilters = {};
-    const { filterParameters } = req.query;
+    const { filterParameters, page = 1, pageSize = 10 } = req.query;
+    const queryFilters = {
+      where: {},
+      limit: pageSize,
+      page: page || 1,
+      offset: (page - 1) * pageSize
+    };
     Array.isArray(filterParameters) &&
       filterParameters.length &&
       filterParameters.forEach(option => {
         if (definedOperations[option.op]) {
-          queryFilters[option.key] = {
+          queryFilters.where[option.key] = {
             [definedOperations[option.op]]: option.value
           };
         }

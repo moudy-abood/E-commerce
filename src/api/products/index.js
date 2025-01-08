@@ -6,13 +6,9 @@ const validator = require('./validator');
 
 router.post('/', validator.create, auth, checkAdmin, controller.createProducts);
 
-router.get('/', controller.listAllProducts);
+router.get('/', queryFilters, controller.allProducts);
 
-router.get('/all', controller.listAll);
-
-router.get('/list', queryFilters, controller.allProducts);
-
-router.get('/category', controller.allByCategory);
+router.get('/categories', controller.allCategories);
 
 router.get('/:uuid', validator.uuid, checkProduct, controller.findProduct);
 
