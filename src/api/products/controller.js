@@ -24,7 +24,7 @@ async function allProducts(req, res) {
 
 async function allCategories(req, res) {
   try {
-    const categories = await productServices.listAllCategories();
+    const categories = await productServices.listCategories();
     return res.status(StatusCodes.OK).send(categories);
   } catch (e) {
     const errorMessage = e.message || e;

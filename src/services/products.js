@@ -7,7 +7,7 @@ async function createProducts(productDetails) {
   return models.Product.bulkCreate(productDetails);
 }
 
-async function listAllCategories() {
+async function listCategories() {
   return models.Product.findAll({
     attributes: [[literal('DISTINCT category '), 'category']]
   });
@@ -41,7 +41,7 @@ const services = {
   update,
   removeProduct,
   listProducts,
-  listAllCategories
+  listCategories
 };
 
 module.exports = services;
