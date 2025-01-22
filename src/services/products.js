@@ -1,3 +1,5 @@
+const { literal } = require('sequelize');
+
 const models = require('../models');
 const { productDataMapper } = require('../utils/helpers');
 
@@ -5,14 +7,19 @@ async function createProducts(productDetails) {
   return models.Product.bulkCreate(productDetails);
 }
 
-async function getAll(page, pageSize) {
-  const offset = (page - 1) * pageSize;
-
-  const result = await models.Product.findAndCountAll({
-    limit: pageSize,
-    offset
+async function listCategories() {
+  return models.Product.findAll({
+    attributes: [[literal('DISTINCT category '), 'category']]
   });
-  return productDataMapper(result, page, pageSize);
+}
+
+async function listProducts(options) {
+  const { page } = options;
+  const result = await models.Product.findAndCountAll({
+    ...options,
+    attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+  });
+  return productDataMapper(result, page);
 }
 
 async function getOne(uuid) {
@@ -28,6 +35,13 @@ async function removeProduct(uuid) {
   return models.Product.destroy({ where: { uuid } });
 }
 
-const services = { createProducts, getAll, getOne, update, removeProduct };
+const services = {
+  createProducts,
+  getOne,
+  update,
+  removeProduct,
+  listProducts,
+  listCategories
+};
 
 module.exports = services;

@@ -1,6 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 const { productServices } = require('../../services');
-const { queryMapper } = require('../../utils/helpers');
 
 async function createProducts(req, res) {
   try {
@@ -12,11 +11,21 @@ async function createProducts(req, res) {
   }
 }
 
-async function listAllProducts(req, res) {
+async function allProducts(req, res) {
   try {
-    const { page, pageSize } = await queryMapper(req.query);
-    const products = await productServices.getAll(page, pageSize);
+    const option = req.queryOptions;
+    const products = await productServices.listProducts(option);
     return res.status(StatusCodes.OK).send(products);
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
+
+async function allCategories(req, res) {
+  try {
+    const categories = await productServices.listCategories();
+    return res.status(StatusCodes.OK).send(categories);
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
@@ -59,10 +68,11 @@ async function deleteProduct(req, res) {
 
 const controller = {
   createProducts,
-  listAllProducts,
   findProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  allProducts,
+  allCategories
 };
 
 module.exports = controller;

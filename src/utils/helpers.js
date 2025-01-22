@@ -1,4 +1,4 @@
-async function productDataMapper(result, page, pageSize) {
+async function productDataMapper(result, page, pageSize = 10) {
   return {
     products: result.rows,
     totalCount: result.count,
@@ -7,13 +7,4 @@ async function productDataMapper(result, page, pageSize) {
   };
 }
 
-async function queryMapper(query) {
-  const page = query.page || 1;
-  const pageSize = query.pageSize || 10;
-  return {
-    page,
-    pageSize
-  };
-}
-
-module.exports = { productDataMapper, queryMapper };
+module.exports = { productDataMapper };
