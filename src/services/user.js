@@ -10,6 +10,13 @@ async function findExposedUser(uuid) {
     attributes: { exclude: ['id', 'password'] }
   });
 }
+
+async function findEmail(email) {
+  return models.User.findOne({
+    where: { email }
+  });
+}
+
 async function update(data, uuid) {
   return models.User.update(data, { where: { uuid } });
 }
@@ -22,6 +29,6 @@ async function findUser(decoded) {
   return models.User.findOne({ where: { id: decoded.userId } });
 }
 
-const services = { create, findExposedUser, update, removeUser, findUser };
+const services = { create, findExposedUser, update, removeUser, findUser, findEmail };
 
 module.exports = services;
