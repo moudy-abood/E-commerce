@@ -9,6 +9,7 @@ const checkAdmin = require('./checkAdmin');
 const checkOrderAddress = require('./checkOrderAddress');
 const checkUser = require('./checkUser');
 const queryFilters = require('./queryFilters');
+const checkEmail = require('./checkEmail');
 
 module.exports = {
   checkProduct,
@@ -21,5 +22,6 @@ module.exports = {
   checkAdmin,
   checkOrderAddress,
   checkUser,
-  queryFilters
+  queryFilters,
+  checkEmail
 };
