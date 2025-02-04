@@ -21,10 +21,12 @@ async function createUser(req, res) {
 }
 
 async function updateUser(req, res) {
-  const data = req.body;
+  const { password } = req.body;
   const { uuid } = req.user;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  req.body.password = hashedPassword;
   try {
-    await userServices.update(data, uuid);
+    await userServices.update({ ...req.body }, uuid);
     return res.status(StatusCodes.NO_CONTENT).send();
   } catch (e) {
     const errorMessage = e.message || e;

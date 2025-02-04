@@ -12,7 +12,7 @@ async function login(req, res) {
     const token = tokenGen({ userId: id });
     return isPasswordMatched
       ? res.status(StatusCodes.OK).send({ token })
-      : res.status(StatusCodes.NOT_FOUND).send(' wrong password or/and username');
+      : res.status(StatusCodes.UNAUTHORIZED).send(' wrong password or/and email');
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
