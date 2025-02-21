@@ -11,18 +11,17 @@ const create = celebrate({
 
 const update = celebrate({
   [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().email(),
     name: Joi.string().alphanum().max(50),
     phoneNumber: Joi.number().integer(),
     role: Joi.string().equal('ADMIN', 'USER')
   })
 });
 
-const updateCredentials = celebrate({
+const updatePassword = celebrate({
   [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().email().required(),
     oldPassword: Joi.string().min(8).max(50).required(),
-    newPassword: Joi.string().min(8).max(50).required(),
-    role: Joi.string().equal('ADMIN', 'USER')
+    newPassword: Joi.string().min(8).max(50).required()
   })
 });
 
@@ -32,4 +31,4 @@ const uuid = celebrate({
   })
 });
 
-module.exports = { create, update, updateCredentials, uuid };
+module.exports = { create, update, updatePassword, uuid };

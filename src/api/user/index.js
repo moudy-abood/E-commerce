@@ -9,13 +9,7 @@ router.post('/', validator.create, checkEmail, controller.createUser);
 
 router.put('/', validator.update, auth, controller.updateUser);
 
-router.put(
-  '/credentials',
-  validator.updateCredentials,
-  auth,
-  checkEmail,
-  controller.updateUserCredentials
-);
+router.put('/credentials', validator.updatePassword, auth, controller.updateUserPassword);
 
 router.get('/', auth, controller.getUser);
 

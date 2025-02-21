@@ -32,7 +32,7 @@ async function updateUser(req, res) {
   }
 }
 
-async function updateUserCredentials(req, res) {
+async function updateUserPassword(req, res) {
   const { newPassword, oldPassword } = req.body;
   const { uuid, password } = req.user;
   const isPasswordMatched = await bcrypt.compare(oldPassword, password);
@@ -72,6 +72,6 @@ async function deleteUser(req, res) {
   }
 }
 
-const controller = { createUser, updateUser, updateUserCredentials, getUser, deleteUser };
+const controller = { createUser, updateUser, updateUserPassword, getUser, deleteUser };
 
 module.exports = controller;
