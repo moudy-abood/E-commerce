@@ -17,7 +17,7 @@ async function listProducts(options) {
   const { page } = options;
   const result = await models.Product.findAndCountAll({
     ...options,
-    attributes: { exclude: ['id', 'createdAt', 'updatedAt'] }
+    attributes: { exclude: ['createdAt', 'updatedAt'] }
   });
   return productDataMapper(result, page);
 }

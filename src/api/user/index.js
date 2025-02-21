@@ -7,7 +7,9 @@ const { errors } = require('celebrate');
 
 router.post('/', validator.create, checkEmail, controller.createUser);
 
-router.put('/', validator.update, auth, checkEmail, controller.updateUser);
+router.put('/', validator.update, auth, controller.updateUser);
+
+router.put('/credentials', validator.updatePassword, auth, controller.updateUserPassword);
 
 router.get('/', auth, controller.getUser);
 

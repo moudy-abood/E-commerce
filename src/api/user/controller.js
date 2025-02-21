@@ -21,11 +21,29 @@ async function createUser(req, res) {
 }
 
 async function updateUser(req, res) {
-  const data = req.body;
   const { uuid } = req.user;
+
   try {
-    await userServices.update(data, uuid);
+    await userServices.update({ ...req.body }, uuid);
     return res.status(StatusCodes.NO_CONTENT).send();
+  } catch (e) {
+    const errorMessage = e.message || e;
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
+  }
+}
+
+async function updateUserPassword(req, res) {
+  const { newPassword, oldPassword } = req.body;
+  const { uuid, password } = req.user;
+  const isPasswordMatched = await bcrypt.compare(oldPassword, password);
+  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+  req.body.password = hashedPassword;
+  try {
+    if (isPasswordMatched) {
+      await userServices.update({ ...req.body }, uuid);
+      return res.status(StatusCodes.NO_CONTENT).send();
+    }
+    return res.status(StatusCodes.UNAUTHORIZED).send(' wrong password');
   } catch (e) {
     const errorMessage = e.message || e;
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(errorMessage);
@@ -54,6 +72,6 @@ async function deleteUser(req, res) {
   }
 }
 
-const controller = { createUser, updateUser, getUser, deleteUser };
+const controller = { createUser, updateUser, updateUserPassword, getUser, deleteUser };
 
 module.exports = controller;
