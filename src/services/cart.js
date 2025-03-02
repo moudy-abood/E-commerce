@@ -7,7 +7,12 @@ async function create(cartDetails) {
 
 async function getUserExposedCart(userId) {
   return models.Cart.findOne({
-    where: { userId },
+    where: {
+      userId,
+      status: {
+        [Op.in]: ['NEW', 'INCOMPLETE']
+      }
+    },
     include: {
       model: models.Item,
       attributes: { exclude: ['id', 'cartId'] },
@@ -19,7 +24,12 @@ async function getUserExposedCart(userId) {
 
 async function getCart(id) {
   return models.Cart.findOne({
-    where: { userId: id }
+    where: {
+      userId: id,
+      status: {
+        [Op.in]: ['NEW', 'INCOMPLETE']
+      }
+    }
   });
 }
 
