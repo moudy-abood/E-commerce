@@ -3,11 +3,14 @@ const { orderServices, cartServices } = require('../../services');
 
 async function createOrder(req, res) {
   const { id, uuid } = req.cart;
-  const { id: addressId } = req.address;
   const { id: userId } = req.user;
   try {
+    await orderServices.create({
+      ...req.body,
+      cartId: id,
+      userId
+    });
     await cartServices.updateCartStatus({ status: 'COMPLETED' }, uuid);
-    await orderServices.create({ ...req.body, cartId: id, addressId, userId });
     return res.status(StatusCodes.CREATED).send();
   } catch (e) {
     const errorMessage = e.message || e;
