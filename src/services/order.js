@@ -1,5 +1,8 @@
 const models = require('../models');
 
+//when it comes to creating an order, it should have a hard copy of its items and addresses,
+//so when it comes to get the orders history, you get the old values even if they are deleted or updated
+
 async function create(orderDetails) {
   return models.Order.create(orderDetails);
 }
@@ -18,16 +21,18 @@ async function findExposedOrder(uuid) {
       },
       {
         model: models.Address,
+        paranoid: false,
         attributes: { exclude: ['id', 'userId'] }
       }
     ],
-    attributes: { exclude: ['id', 'cartId', 'addressId'] }
+    attributes: { exclude: ['id', 'cartId', 'addressId', 'userId'] }
   });
 }
 
 async function findUserExposedOrders(id) {
   return models.Order.findAll({
     where: { userId: id },
+    order: [['createdAt', 'DESC']],
     include: [
       {
         model: models.Cart,
@@ -39,6 +44,7 @@ async function findUserExposedOrders(id) {
       },
       {
         model: models.Address,
+        paranoid: false,
         attributes: { exclude: ['id', 'userId'] }
       }
     ],
@@ -60,6 +66,7 @@ async function findUsersExposedOrders() {
       },
       {
         model: models.Address,
+        paranoid: false,
         attributes: { exclude: ['id', 'userId'] }
       }
     ],
